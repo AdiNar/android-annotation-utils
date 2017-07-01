@@ -1,4 +1,4 @@
-package adinar.annotationsutils.objectdialog;
+package adinar.annotationsutils.objectdialog.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@interface DialogField {
+public @interface DialogField {
     /** Items in dialog will be ordered by this value. Lower = higher priority. */
     double order();
 

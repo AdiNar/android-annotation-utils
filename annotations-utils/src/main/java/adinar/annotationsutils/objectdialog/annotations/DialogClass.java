@@ -1,4 +1,4 @@
-package adinar.annotationsutils.objectdialog;
+package adinar.annotationsutils.objectdialog.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
   * Title should be specified here or by DialogTitle annotation inside class. */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@interface DialogClass {
+public @interface DialogClass {
     String title() default "";
     int titleId() default 0;
 }
