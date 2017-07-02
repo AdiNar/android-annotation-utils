@@ -15,6 +15,7 @@ import adinar.annotationsutils.objectdialog.annotations.DialogTitle;
 
 /** Responsible for parsing all annotations and supplying data to dialog. */
 class DialogClassData<T> {
+    private static final String TAG = "DialogClassData";
     private List<DialogFieldEntry<T>> fields = new ArrayList<>();
     private DialogTitleEntry<T> title;
     private Context ctx;
@@ -41,7 +42,7 @@ class DialogClassData<T> {
             titleString = ctx.getString(ann.titleId());
         }
 
-        if (titleString.length() == 0) {
+        if (titleString.length() != 0) {
             title = DialogTitleEntry.titleFromString(titleString);
         }
     }

@@ -11,6 +11,7 @@ import adinar.annotationsutils.R;
 
 /** Bridge between AlertDialog.Builder and DialogClassData. */
 class DialogDataManager<T> {
+    private static final String TAG = "DialogDataManager";
     private DialogClassData<T> data;
     private AlertDialog.Builder builder;
     private T object;
@@ -35,5 +36,7 @@ class DialogDataManager<T> {
         for (DialogFieldEntry<T> e : entries) {
             view.addView(e.generateView(object, ctx));
         }
+
+        builder.setView(view);
     }
 }

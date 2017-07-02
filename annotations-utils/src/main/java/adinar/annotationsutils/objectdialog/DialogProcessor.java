@@ -29,7 +29,7 @@ public class DialogProcessor<T> {
         DialogDataManager<T> man = new DialogDataManager<T>(object, data, builder);
 
         man.setTitle();
-        //buttonManager.setButtons(builder);
+        //buttonManager.setButtons(builder); // TODO
         man.setView(ctx);
 
         dialog = builder.create();

@@ -21,7 +21,7 @@ class EditTextViewCreator extends DialogElementViewCreator {
 
     @Override
     protected void fillView(View view) {
-        EditText et = view.findViewById(R.id.value);
+        EditText et = (EditText) view.findViewById(R.id.value);
         et.setText(entry.getFieldValue());
     }
 
