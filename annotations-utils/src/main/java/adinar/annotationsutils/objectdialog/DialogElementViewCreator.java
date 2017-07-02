@@ -7,7 +7,7 @@ import android.view.View;
 /** Abstract class that creates view out of
  * {@link adinar.annotationsutils.objectdialog.DialogClassData}.
  * Different implementations contain different view types. */
-abstract class DialogElementViewCreator {
+abstract class DialogElementViewCreator<T extends View> {
     private Context ctx;
 
     public DialogElementViewCreator(Context ctx) {
@@ -20,6 +20,7 @@ abstract class DialogElementViewCreator {
         return view;
     }
 
+    public abstract T getValueView();
     protected abstract void fillView(View view);
     protected abstract int getViewId();
 }

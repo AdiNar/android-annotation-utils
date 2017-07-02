@@ -10,5 +10,5 @@ public abstract class SimpleAnnotationDialogListener<T> implements AnnotationDia
     public void onDialogDismissed() {}
 
     @Override
-    public void onDialogNeutral() {}
+    public void onDialogNeutral(int buttonId) {}
 }

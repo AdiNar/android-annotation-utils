@@ -7,12 +7,11 @@ import android.util.LruCache;
 
 public class DialogProcessor<T> {
     private Context ctx;
-    private T object;
     private Dialog dialog;
 
     private static LruCache<Class, DialogClassData> cache;
 
-    private static final int DEFAULT_LRU_SIZE = 100;
+    private static final int DEFAULT_LRU_SIZE = 1000;
 
     static {
         cache = new LruCache<>(DEFAULT_LRU_SIZE);
@@ -26,20 +25,25 @@ public class DialogProcessor<T> {
         DialogClassData<T> data = prepareDataForClass((Class<T>) object.getClass());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-        DialogDataManager<T> man = new DialogDataManager<T>(object, data, builder);
+        DialogDataManager<T> man = new DialogDataManager<>(object, data, builder);
 
         man.setTitle();
-        //buttonManager.setButtons(builder); // TODO
         man.setView(ctx);
+        man.setButtons(listener);
 
         dialog = builder.create();
 
-        //buttonManager.setListeners(dialog, listener);
+        // Dialog must be shown before the next line with setting positive listener.
+        dialog.show();
+        man.setPositiveButtonListener((AlertDialog) dialog, listener);
 
         return dialog;
     }
 
-
+    /** Call this in activity onBackPressed to hide dialog. */
+    public void onBackPressed() {
+        if (dialog != null && dialog.isShowing()) dialog.hide();
+    }
 
     private DialogClassData prepareDataForClass(Class<T> clazz) {
         if (cache.get(clazz) == null) {

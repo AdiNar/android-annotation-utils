@@ -25,6 +25,7 @@ public class AnnotationFilter {
         this.clazz = clazz;
         fieldAnns = new ArrayList<>();
         methAnns = new ArrayList<>();
+        allowedAnnotations = new ArrayList<>();
     }
 
     public AnnotationFilter addAnnotation(Class<? extends Annotation> ann) {

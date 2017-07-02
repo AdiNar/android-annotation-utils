@@ -12,5 +12,5 @@ interface AnnotationDialogListener<T> {
     /** Called on click outside dialog or back button. */
     void onDialogDismissed();
     /** Called on dialog's neutral button click. */
-    void onDialogNeutral();
+    void onDialogNeutral(int buttonId);
 }

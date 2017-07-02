@@ -12,4 +12,7 @@ import java.lang.annotation.Target;
 public @interface DialogClass {
     String title() default "";
     int titleId() default 0;
+
+    /** Buttons that will be applied to dialog, first button on list will be the most left. */
+    DialogButton[] buttons() default {};
 }
