@@ -80,14 +80,13 @@ public class ViewInserterHolder<T> extends RecyclerView.ViewHolder {
             }
         }
 
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener == null) {
-                    Log.i(TAG, "Click received, but no listener specified");
-                } else
+        if (listener != null) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     listener.onItemClick(item, itemId, v);
-            }
-        });
+                }
+            });
+        }
     }
 }

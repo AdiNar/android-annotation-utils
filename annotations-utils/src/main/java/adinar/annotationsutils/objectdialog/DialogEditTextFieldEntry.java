@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import adinar.annotationsutils.R;
+import adinar.annotationsutils.Utils;
 import adinar.annotationsutils.objectdialog.annotations.DialogEditText;
 import adinar.annotationsutils.objectdialog.validation.TextViewValidator;
 import adinar.annotationsutils.objectdialog.validation.ValidatorBuilder;
@@ -57,7 +58,7 @@ class DialogEditTextFieldEntry<T> extends DialogFieldEntry<T> {
             throws InstantiationException, IllegalAccessException {
         TextViewValidator val = v.clazz().newInstance();
         val.setView(et);
-        val.setErrorMessageString(ctx.getString(v.errorMsgId()));
+        val.setErrorMessageString(Utils.getString(ctx, v.errorMsgId()));
         return val;
     }
 

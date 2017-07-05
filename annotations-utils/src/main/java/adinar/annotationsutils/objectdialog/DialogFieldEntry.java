@@ -14,7 +14,7 @@ import adinar.annotationsutils.objectdialog.validation.Validator;
 import adinar.annotationsutils.objectdialog.validation.ValidatorBuilder;
 
 /**  */
-abstract class DialogFieldEntry<T> {
+public abstract class DialogFieldEntry<T> {
     protected final Context ctx;
     private final Field field;
     private final String fieldName;
@@ -33,6 +33,24 @@ abstract class DialogFieldEntry<T> {
 
     static {
         valueOfCache = new HashMap<>();
+    }
+
+    public static Method getValueOfForClass(Class clazz) {
+        clazz = PrimitiveToObjectConverter.getObjectClass(clazz);
+
+        Method meth = valueOfCache.get(clazz);
+
+        if (meth == null && clazz != String.class) {
+            try {
+                meth = clazz.getMethod("valueOf", String.class);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(String.format("Class %s should implement static " +
+                        "method valueOf(String)", clazz));
+            }
+            valueOfCache.put(clazz, meth);
+        }
+
+        return meth;
     }
 
     /**  @param f: Field to manage. */
@@ -64,7 +82,8 @@ abstract class DialogFieldEntry<T> {
         try {
             boolean access = field.isAccessible();
             field.setAccessible(true);
-            String res = String.valueOf(field.get(object));
+            Object value = field.get(object);
+            String res = String.valueOf(value == null ? "" : value);
             field.setAccessible(access);
             return res;
         } catch (IllegalAccessException e) {
@@ -76,16 +95,8 @@ abstract class DialogFieldEntry<T> {
 
     /** Used to save data from dialog to object. */
     public void setFieldValue(String value) {
-        Method meth = customValueOf != null ? customValueOf : valueOfCache.get(object.getClass());
-        if (meth == null && field.getType() != String.class) {
-            try {
-                meth = field.getType().getMethod("valueOf", String.class);
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException(String.format("Class %s should implement static " +
-                        "method valueOf(String)", field.getType()));
-            }
-            valueOfCache.put(field.getType(), meth);
-        }
+        Method meth = customValueOf;
+        if (meth == null && field.getType() != String.class) meth = getValueOfForClass(field.getType());
 
         try {
             Object convertedValue = field.getType() == String.class ?
