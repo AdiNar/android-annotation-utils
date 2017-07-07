@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 public class AnnotationFilter {
+    private static final String TAG = "AnnotationFilter";
     private Class clazz;
 
     private Entry<Class> classAnns;
@@ -33,22 +34,30 @@ public class AnnotationFilter {
         return this;
     }
 
-    public void filter() {
+    public AnnotationFilter filter() {
         for (Field f : clazz.getDeclaredFields()) {
-            fieldAnns.add(extractAnnsFrom(f));
+            Entry entry = extractAnnsFrom(f);
+            if (!entry.isEmpty()) {
+                fieldAnns.add(entry);
+            }
         }
 
         for (Method m : clazz.getDeclaredMethods()) {
-            methAnns.add(extractAnnsFrom(m));
+            Entry entry = extractAnnsFrom(m);
+            if (!entry.isEmpty()) {
+                methAnns.add(entry);
+            }
         }
 
         classAnns = extractAnnsFrom(clazz);
+
+        return this;
     }
 
     private<T extends AnnotatedElement> Entry<T> extractAnnsFrom(T obj) {
         Entry<T> entry = new Entry<>(obj);
-        for (Annotation a : obj.getDeclaredAnnotations()) {
-            if (allowedAnnotations.contains(a.getClass())) {
+        for (Annotation a : obj.getAnnotations()) {
+            if (allowedAnnotations.contains(a.annotationType())) {
                 entry.addAnn(a);
             }
         }
@@ -59,6 +68,7 @@ public class AnnotationFilter {
     public static class Entry<T extends AnnotatedElement> {
         /** Field, Method or Class. */
         private T obj;
+        /** Instances of {@link Annotation}s that @obj fields contains, filtered. */
         private Map<Class<? extends Annotation>, Annotation> anns;
 
         public Entry(T obj) {
@@ -67,7 +77,7 @@ public class AnnotationFilter {
         }
 
         public void addAnn(Annotation ann) {
-            anns.put(ann.getClass(), ann);
+            anns.put(ann.annotationType(), ann);
         }
 
         public<S extends Annotation> S getAnn(Class<S> clazz) {
@@ -86,6 +96,10 @@ public class AnnotationFilter {
             }
 
             return null;
+        }
+
+        public boolean isEmpty() {
+            return anns.isEmpty();
         }
     }
 

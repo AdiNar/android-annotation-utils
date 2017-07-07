@@ -9,6 +9,8 @@ import android.view.View;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 import adinar.annotationsutils.common.AnnotationFilter;
 import adinar.annotationsutils.viewinserter.annotations.InsertTo;
@@ -16,7 +18,12 @@ import adinar.annotationsutils.viewinserter.annotations.InsertTo;
 public class ViewInserterHolder<T> extends RecyclerView.ViewHolder {
     private static final String TAG = "ViewInserterHolder";
     private SparseArray<View> idToViewMap = new SparseArray<>();
+    private static Map<Class, AnnotationFilter> cache;
     private AnnotationFilter filter;
+
+    static {
+        cache = new HashMap<>();
+    }
 
     public ViewInserterHolder(View view, AnnotationFilter filter) {
         super(view);
@@ -25,12 +32,22 @@ public class ViewInserterHolder<T> extends RecyclerView.ViewHolder {
     }
 
     public ViewInserterHolder(View view, Class<T> clazz) {
-        this(view, new AnnotationFilter(clazz).addAnnotation(InsertTo.class));
+        this(view, getAnnotationFilter(clazz));
+    }
+
+    private static<T> AnnotationFilter getAnnotationFilter(Class<T> clazz) {
+        AnnotationFilter filter = cache.get(clazz);
+        if (filter == null) {
+            filter = new AnnotationFilter(clazz).addAnnotation(InsertTo.class).filter();
+            cache.put(clazz, filter);
+        }
+        return filter;
     }
 
     /** Look for all ids used in annotations and cache their views. */
     private void matchIdsWithViews(View view, AnnotationFilter filter) {
         for (AnnotationFilter.Entry e : filter.getAllAnnotated()) {
+            Log.d(TAG, String.format("field found"));
             InsertTo ann = (InsertTo) e.getAnn(InsertTo.class);
             View annView = view.findViewById(ann.id());
             if (annView != null) idToViewMap.put(ann.id(), annView);

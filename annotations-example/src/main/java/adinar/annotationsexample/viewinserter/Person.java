@@ -4,7 +4,6 @@ package adinar.annotationsexample.viewinserter;
 import adinar.annotationsexample.R;
 import adinar.annotationsutils.viewinserter.annotations.InsertTo;
 
-
 public class Person {
 
     @InsertTo(id = R.id.name)

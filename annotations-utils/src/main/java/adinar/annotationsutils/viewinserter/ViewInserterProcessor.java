@@ -3,36 +3,35 @@ package adinar.annotationsutils.viewinserter;
 
 import android.view.View;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-
-import adinar.annotationsutils.common.AnnotationFilter;
-import adinar.annotationsutils.viewinserter.annotations.InsertTo;
-
 public class ViewInserterProcessor {
-    private static Map<Class, AnnotationFilter> cache;
+    public static<T> void insertIntoAndKeepTag(View view, T object,
+                                               OnInsertedViewClickListener<T> listener, int objectId) {
+        insertInto(new ViewInserterHolder(view, object.getClass()), object, listener, objectId);
+    }
 
-    static {
-        cache = new HashMap<>();
+    public static<T> void insertIntoAndKeepTag(View view, T object) {
+        insertInto(new ViewInserterHolder(view, object.getClass()), object, null, 0);
     }
 
     public static<T> void insertInto(View view, T object) {
-        AnnotationFilter filter = getFilterFor(object.getClass());
-
-        for (AnnotationFilter.Entry<Field> e : filter.getFields()) {
-            InsertTo ann = e.getAnn(InsertTo.class);
-            view.findViewById(ann.id());
-        }
+        insertInto(view, object, null, 0);
     }
 
-    private static AnnotationFilter getFilterFor(Class<?> clazz) {
-        AnnotationFilter f = cache.get(clazz);
-        if (f == null) {
-            f = new AnnotationFilter(clazz).addAnnotation(InsertTo.class);
-            cache.put(clazz, f);
+    /** This approach assumes that @object's tag is not used anywhere.
+     * Useful for list elements etc where tag is normally used. */
+    public static<T> void insertInto(View view, T object,
+                                     OnInsertedViewClickListener<T> listener, int objectId) {
+        ViewInserterHolder<T> holder = (ViewInserterHolder<T>) view.getTag();
+        if (holder == null) {
+            holder = new ViewInserterHolder(view, (Class<T>) object.getClass());
+            view.setTag(holder);
         }
 
-        return f;
+        insertInto(holder, object, listener, objectId);
+    }
+
+    private static<T> void insertInto(ViewInserterHolder<T> holder, T object,
+                                      OnInsertedViewClickListener<T> listener, int objectId) {
+        holder.insertData(object, listener, objectId);
     }
 }
