@@ -35,5 +35,9 @@
             android:name=".dialog.DialogButtonsExample"
             android:windowSoftInputMode="adjustResize">
         </activity>
+        <activity
+            android:name=".viewinserter.ViewInserterExamplesList"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
     </application>
 </manifest>
