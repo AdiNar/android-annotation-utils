@@ -10,7 +10,7 @@ import java.util.Map;
 import adinar.annotationsutils.common.AnnotationFilter;
 import adinar.annotationsutils.viewinserter.annotations.InsertTo;
 
-public class ViewInsertProcessor {
+public class ViewInserterProcessor {
     private static Map<Class, AnnotationFilter> cache;
 
     static {

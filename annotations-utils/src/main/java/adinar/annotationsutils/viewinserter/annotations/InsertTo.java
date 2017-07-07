@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/** Annotations that allows ViewInsertProcessor to make view holder and insert values into view. */
+/** Annotations that allows ViewInserterProcessor to make view holder and insert values into view. */
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface InsertTo {
@@ -25,7 +25,7 @@ public @interface InsertTo {
     boolean asString() default false;
 
 
-    // {@link ViewInsertProcessor} allows to save data from view to object, @saveWith specifies
+    // {@link ViewInserterProcessor} allows to save data from view to object, @saveWith specifies
     // method used on view to retrieve data, if empty getText() will be used.
     @Target(ElementType.FIELD)
     @Retention(RetentionPolicy.RUNTIME)
