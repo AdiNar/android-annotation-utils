@@ -2,7 +2,6 @@ package adinar.annotationsutils.common;
 
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -75,35 +74,18 @@ public class AnnotationFilter {
             return clazz.cast(anns.get(clazz));
         }
 
-        /** Value is extracted from method or field. Accessibility is changed to allow private
-          * members read, that's a bit hacky, if you don't like it just don't use it with private
-          * members.
+        /** Value is extracted from method or field.
           * @param itemInstance: Object to get value from. */
         public Object getValue(Object itemInstance) {
-            AccessibleObject accObj = (AccessibleObject) obj;
-            boolean access = accObj.isAccessible();
-            accObj.setAccessible(true);
-            Object result = null;
-            if (accObj.getClass() == Method.class) {
-                try {
-                    result = ((Method)accObj).invoke(itemInstance);
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace(); // Should never happen!
-                }
+            try {
+                return FieldAndMethodAccess.getValue(obj, itemInstance);
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
             }
 
-            if (accObj.getClass() == Field.class) {
-                try {
-                    result = ((Field)accObj).get(itemInstance);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace(); // Should never happen!
-                }
-            }
-            accObj.setAccessible(access);
-
-            return result;
+            return null;
         }
     }
 

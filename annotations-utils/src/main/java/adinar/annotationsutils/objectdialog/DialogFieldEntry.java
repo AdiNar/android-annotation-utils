@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import adinar.annotationsutils.common.FieldAndMethodAccess;
 import adinar.annotationsutils.objectdialog.validation.Validator;
 import adinar.annotationsutils.objectdialog.validation.ValidatorBuilder;
 
@@ -80,17 +81,11 @@ public abstract class DialogFieldEntry<T> {
 
     public String getFieldValue() {
         try {
-            boolean access = field.isAccessible();
-            field.setAccessible(true);
-            Object value = field.get(object);
-            String res = String.valueOf(value == null ? "" : value);
-            field.setAccessible(access);
-            return res;
+            return FieldAndMethodAccess.getStringFieldValue(field, object);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e); // Just show this to developer, this should be
+            // a compile time problem.
         }
-
-        return null;
     }
 
     /** Used to save data from dialog to object. */
@@ -102,11 +97,7 @@ public abstract class DialogFieldEntry<T> {
             Object convertedValue = field.getType() == String.class ?
                     value :
                     meth.invoke(null, value);
-            boolean access = field.isAccessible(); // TODO replace all occurences of this with sth nice
-            field.setAccessible(true);
-            field.set(object, convertedValue);
-            field.setAccessible(access);
-
+            FieldAndMethodAccess.setFieldValue(field, object, convertedValue);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
