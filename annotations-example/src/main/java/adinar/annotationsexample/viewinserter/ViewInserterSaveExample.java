@@ -1,5 +1,7 @@
 package adinar.annotationsexample.viewinserter;
 
 
-public class ViewInserterSaveExample {
+import adinar.annotationsexample.custom.CustomTitleActivity;
+
+public class ViewInserterSaveExample extends CustomTitleActivity {
 }

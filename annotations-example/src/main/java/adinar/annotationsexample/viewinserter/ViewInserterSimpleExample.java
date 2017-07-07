@@ -10,9 +10,6 @@ import adinar.annotationsutils.viewinserter.ViewInserterProcessor;
 
 public class ViewInserterSimpleExample extends CustomTitleActivity {
 
-    private Person data;
-    private View viewToInsert;
-
     @Override
     public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
@@ -20,15 +17,19 @@ public class ViewInserterSimpleExample extends CustomTitleActivity {
         setContentView(R.layout.view_inserter_layout);
 
         init();
-        insertData();
-    }
-
-    private void insertData() {
-        ViewInserterProcessor.insertInto(viewToInsert, data);
     }
 
     private void init() {
-        data = new Person("John", "Johnatansky", 20);
+        Person person;
+        View viewToInsert;
+
+        person = new Person("John", "Johnatansky", 20);
+        viewToInsert = findViewById(R.id.person_layout);
+
+        ViewInserterProcessor.insertInto(viewToInsert, person);
+        
+        Data data = new Data();
         viewToInsert = findViewById(R.id.data_layout);
+        ViewInserterProcessor.insertInto(viewToInsert, data);
     }
 }
