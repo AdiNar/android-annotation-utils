@@ -2,10 +2,10 @@ package adinar.annotationsexample;
 
 
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import adinar.annotationsexample.custom.CustomTitleActivity;
 
-public abstract class ActivityWithFab extends AppCompatActivity {
+public abstract class ActivityWithFab extends CustomTitleActivity {
 
     @Override
     public void setContentView(int id) {

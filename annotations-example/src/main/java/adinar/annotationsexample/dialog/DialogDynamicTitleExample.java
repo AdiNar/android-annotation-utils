@@ -1,5 +1,8 @@
 package adinar.annotationsexample.dialog;
 
 
-class DialogDynamicTitleExample {
+public class DialogDynamicTitleExample extends DialogSimpleActivity<Titled> {
+    protected Class<Titled> getDataClass() {
+        return Titled.class;
+    }
 }

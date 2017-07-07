@@ -1,5 +1,8 @@
 package adinar.annotationsexample.dialog;
 
 
-class DialogValidatorsExample {
+public class DialogValidatorsExample extends DialogSimpleActivity<City> {
+    protected Class<City> getDataClass() {
+        return City.class;
+    }
 }

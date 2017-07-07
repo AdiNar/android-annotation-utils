@@ -16,7 +16,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".dialog.DialogExampleActivity"
+            android:name=".dialog.DialogSimpleActivity"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
+        <activity
+            android:name=".dialog.DialogExamplesList"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
+        <activity
+            android:name=".dialog.DialogDynamicTitleExample"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
+        <activity
+            android:name=".dialog.DialogValidatorsExample"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
+        <activity
+            android:name=".dialog.DialogButtonsExample"
             android:windowSoftInputMode="adjustResize">
         </activity>
     </application>

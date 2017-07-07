@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">AnnotationsExample</string>
+    <string name="name">Name</string>
+    <string name="contact_phone">Phone</string>
+    <string name="OK">OK</string>
+    <string name="error">Error</string>
+    <string name="city">City</string>
+    <string name="zip_code">Zip code</string>
+    <string name="phone">Phone</string>
+    <string name="citizens">Citizens</string>
+    <string name="must_be_ge_0"><![CDATA[Number must be > 0!]]></string>
 </resources>

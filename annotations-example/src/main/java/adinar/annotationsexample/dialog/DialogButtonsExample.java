@@ -1,5 +1,7 @@
 package adinar.annotationsexample.dialog;
 
 
-class DialogButtonsExample {
+import android.app.Activity;
+
+public class DialogButtonsExample extends Activity {
 }
