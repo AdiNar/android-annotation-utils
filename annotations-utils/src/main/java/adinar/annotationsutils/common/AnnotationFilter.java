@@ -2,6 +2,7 @@ package adinar.annotationsutils.common;
 
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -115,8 +116,8 @@ public class AnnotationFilter {
         return classAnns;
     }
 
-    public List<Entry> getAllAnnotated() {
-        List<Entry> all = new ArrayList<>();
+    public List<Entry<? extends AccessibleObject>> getAllAnnotated() {
+        List<Entry<? extends AccessibleObject>> all = new ArrayList<>();
         all.addAll(fieldAnns);
         all.addAll(methAnns);
 

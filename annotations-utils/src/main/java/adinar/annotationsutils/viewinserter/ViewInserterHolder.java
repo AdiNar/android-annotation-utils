@@ -6,7 +6,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -47,7 +47,6 @@ public class ViewInserterHolder<T> extends RecyclerView.ViewHolder {
     /** Look for all ids used in annotations and cache their views. */
     private void matchIdsWithViews(View view, AnnotationFilter filter) {
         for (AnnotationFilter.Entry e : filter.getAllAnnotated()) {
-            Log.d(TAG, String.format("field found"));
             InsertTo ann = (InsertTo) e.getAnn(InsertTo.class);
             View annView = view.findViewById(ann.id());
             if (annView != null) idToViewMap.put(ann.id(), annView);
@@ -67,7 +66,7 @@ public class ViewInserterHolder<T> extends RecyclerView.ViewHolder {
                            final OnInsertedViewClickListener<T> listener,
                            final int itemId) {
 
-        for (AnnotationFilter.Entry<Field> e : filter.getFields()) {
+        for (AnnotationFilter.Entry<? extends AccessibleObject> e : filter.getAllAnnotated()) {
             InsertTo ann = e.getAnn(InsertTo.class);
             View dst = idToViewMap.get(ann.id());
 
@@ -87,6 +86,10 @@ public class ViewInserterHolder<T> extends RecyclerView.ViewHolder {
             );
 
             Object value = e.getValue(item);
+
+            if (ann.asString()) {
+                value = value.toString();
+            }
 
             try {
                 meth.invoke(dst, ann.argumentClass().cast(value));

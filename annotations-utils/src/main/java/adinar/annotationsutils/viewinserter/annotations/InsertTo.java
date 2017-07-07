@@ -1,6 +1,8 @@
 package adinar.annotationsutils.viewinserter.annotations;
 
 
+import android.widget.TextView;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -16,10 +18,10 @@ public @interface InsertTo {
     String method() default "setText";
     // class which contains method(), by default processor will look for it
     // in spotted view and its superclasses.
-    Class methodClass() default void.class;
+    Class methodClass() default TextView.class;
     // class of argument taken by method(). Important because processor needs exact argument class,
     // not it subclass or parent.
-    Class argumentClass() default void.class;
+    Class argumentClass() default CharSequence.class;
     // set argumentClass() to CharSequence.class, and converts field / method by toString() method
     // for String.class argument should provide argumentClass()
     boolean asString() default false;

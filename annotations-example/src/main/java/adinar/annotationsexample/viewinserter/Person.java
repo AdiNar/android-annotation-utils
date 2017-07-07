@@ -17,7 +17,7 @@ public class Person {
 
     @InsertTo(id = R.id.full_name)
     public String getFullName() {
-        return String.format("%s %s", name, surname);
+        return String.format("Full name: %s %s", name, surname);
     }
 
     public Person(String name, String surname, int age) {
