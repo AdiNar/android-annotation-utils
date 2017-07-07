@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 public class ViewMethodResolver {
     private static final ViewMethodResolver ourInstance = new ViewMethodResolver();
     private static final int MAX_LRU_CACHE = 1000000;
+    private static final String TAG = "ViewMethodResolver";
 
     public static ViewMethodResolver getInstance() {
         return ourInstance;
@@ -39,7 +40,6 @@ public class ViewMethodResolver {
             if (!methodName.equals(that.methodName)) return false;
             if (!argumentClass.equals(that.argumentClass)) return false;
             return methodClass.equals(that.methodClass);
-
         }
 
         @Override
@@ -64,12 +64,15 @@ public class ViewMethodResolver {
 
         public Method getMethod(Class methodClass) {
             if (methodClass == null) {
-                throw new NoSuchMethodExceptionRuntime(String.format("Method %s(%s) was not found in " +
+                throw new NoSuchMethodExceptionRuntime(
+                        String.format("Method %s(%s) was not found in " +
                                 "%s and it's superclasses. " +
-                                "Ensure method argument type is exactly matching!",
+                                "Ensure method argument type is exactly matching! %s",
                         methodName,
-                        argumentClass.getSimpleName(),
-                        orgMethodClass.getSimpleName()));
+                        String.valueOf(argumentClass),
+                        String.valueOf(orgMethodClass),
+                        argumentClass == CharSequence.class ?
+                                "CharSequence is default type, you need to change it." : ""));
             }
 
             MethodEntry entry = new MethodEntry(methodName, argumentClass, methodClass);
@@ -82,7 +85,7 @@ public class ViewMethodResolver {
             try {
                 meth = methodClass.getDeclaredMethod(methodName, argumentClass);
             } catch (NoSuchMethodException e) {
-                meth = getMethodFor(methodName, argumentClass, methodClass.getSuperclass());
+                meth = getMethod(methodClass.getSuperclass());
             }
 
             cache.put(entry, meth);
@@ -97,7 +100,7 @@ public class ViewMethodResolver {
     /** Exception thrown when no method with given signature was found. May be caused by
      *  misspell or wrong argument Class (ex. if CharSequence is expected String cannot
      *  be directly passed.) */
-    private class NoSuchMethodExceptionRuntime extends RuntimeException {
+    public static class NoSuchMethodExceptionRuntime extends RuntimeException {
         public NoSuchMethodExceptionRuntime(String format) {
             super(format);
         }

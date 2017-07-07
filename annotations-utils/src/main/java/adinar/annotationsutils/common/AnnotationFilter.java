@@ -99,6 +99,10 @@ public class AnnotationFilter {
             return null;
         }
 
+        public T getObj() {
+            return obj;
+        }
+
         public boolean isEmpty() {
             return anns.isEmpty();
         }
