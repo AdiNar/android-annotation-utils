@@ -72,7 +72,7 @@ public class DialogSimpleActivity<T> extends ActivityWithFab {
 
     private void initListView() {
         ListView lv = (ListView) findViewById(R.id.example_list);
-        adapter = new ViewInserterArrayAdapter<>(this, R.layout.person_layout, data);
+        adapter = new ViewInserterArrayAdapter<>(this, R.layout.dialog_person_layout, data);
         lv.setAdapter(adapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

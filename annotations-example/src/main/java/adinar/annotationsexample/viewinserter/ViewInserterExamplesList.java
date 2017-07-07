@@ -7,8 +7,8 @@ public class ViewInserterExamplesList  extends ExampleListActivity {
 
     @Override
     protected Entry[] getEntries() {
-        return new Entry[]{
-
+        return new Entry[] {
+            new Entry("Simple", ViewInserterSimpleExample.class),
         };
     }
 }
