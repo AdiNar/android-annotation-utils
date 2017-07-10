@@ -16,6 +16,7 @@ import adinar.annotationsutils.objectdialog.validation.ValidatorBuilder;
 
 /**  */
 public abstract class DialogFieldEntry<T> {
+    private static final String TAG = "DialogFieldEntry";
     protected final Context ctx;
     private final Field field;
     private final String fieldName;
@@ -36,22 +37,41 @@ public abstract class DialogFieldEntry<T> {
         valueOfCache = new HashMap<>();
     }
 
+    /** Method used as valueOf for strings - just id function. */
+    static String stringId(String value) {
+        return value;
+    }
+
+    private static Method stringIdMethod = null;
+
+    // TODO move it somewhere else.
     public static Method getValueOfForClass(Class clazz) {
         clazz = PrimitiveToObjectConverter.getObjectClass(clazz);
 
         Method meth = valueOfCache.get(clazz);
 
-        if (meth == null && clazz != String.class) {
-            try {
-                meth = clazz.getMethod("valueOf", String.class);
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException(String.format("Class %s should implement static " +
-                        "method valueOf(String)", clazz));
+        if (meth == null) {
+                try {
+                    if (clazz != String.class) {
+                        meth = clazz.getMethod("valueOf", String.class);
+                        valueOfCache.put(clazz, meth);
+                    } else {
+                        return getStringIdMethod();
+                    }
+                } catch (NoSuchMethodException e) {
+                    throw new RuntimeException(String.format("Class %s should implement static " +
+                            "method valueOf(String)", clazz));
+                }
             }
-            valueOfCache.put(clazz, meth);
-        }
 
         return meth;
+    }
+
+    private static Method getStringIdMethod() throws NoSuchMethodException {
+        if (stringIdMethod == null) {
+            stringIdMethod = DialogFieldEntry.class.getMethod("stringId", String.class);
+        }
+        return stringIdMethod;
     }
 
     /**  @param f: Field to manage. */

@@ -5,16 +5,17 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.TextView;
 
 import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
 import adinar.annotationsutils.common.AnnotationFilter;
-import adinar.annotationsutils.objectdialog.PrimitiveToObjectConverter;
+import adinar.annotationsutils.objectdialog.DialogFieldEntry;
 import adinar.annotationsutils.viewinserter.annotations.InsertTo;
 
 public class ViewInserterHolder<T> extends RecyclerView.ViewHolder {
@@ -82,7 +83,8 @@ public class ViewInserterHolder<T> extends RecyclerView.ViewHolder {
             Class argumentClass = getArgumentClass(e, ann);
             Class methodClass = getMethodClass(ann);
 
-            Method meth = getMethodAndCheckHeuristics(ann, argumentClass, methodClass);
+            Method meth = MethodResolver
+                    .getMethodAndCheckHeuristics(ann.method(), argumentClass, methodClass);
 
             Object value = e.getValue(item);
 
@@ -109,39 +111,6 @@ public class ViewInserterHolder<T> extends RecyclerView.ViewHolder {
         }
     }
 
-    private Method getMethodAndCheckHeuristics(InsertTo ann, Class argumentClass, Class methodClass) {
-        Method meth;
-        // @meth is a view method like EditText.getText(), value of item field / method
-        // will be applied to it.
-        try {
-            meth = getMethodFor(ann, argumentClass, methodClass);
-        } catch (ViewMethodResolver.NoSuchMethodExceptionRuntime e1) {
-            // Heuristic, many Android Views methods that take text
-            // takes CharSequence as argument.
-            if (argumentClass == String.class) {
-                meth = getMethodFor(ann, CharSequence.class, methodClass);
-            } else {
-                // Another heuristic, because Integer.class != int.class we should check it...
-                Class objectClass = PrimitiveToObjectConverter.getObjectClass(argumentClass);
-                if (objectClass != argumentClass) {
-                    meth = getMethodFor(ann, objectClass, methodClass);
-                } else {
-                    throw e1;
-                }
-            }
-        }
-        return meth;
-    }
-
-    private Method getMethodFor(InsertTo ann, Class argumentClass, Class methodClass) {
-        Method meth = ViewMethodResolver.getInstance().getMethodFor(
-                ann.method(),
-                argumentClass,
-                methodClass
-        );
-        return meth;
-    }
-
     private Class getMethodClass(InsertTo ann) {
         Class methodClass = ann.methodClass();
         if (methodClass == void.class) methodClass = idToViewMap.get(ann.id()).getClass();
@@ -153,19 +122,98 @@ public class ViewInserterHolder<T> extends RecyclerView.ViewHolder {
         if (ann.asString()) {
             argumentClass = String.class;
         }
-        if (argumentClass == void.class) argumentClass = getReturnType(e);
+        if (argumentClass == void.class) argumentClass = e.getReturnType();
         return argumentClass;
     }
 
-    private Class getReturnType(AnnotationFilter.Entry<? extends AccessibleObject> e) {
-        AccessibleObject ao = e.getObj();
-        if (ao instanceof Field) {
-            return ((Field)ao).getType();
-        }
-        if (ao instanceof Method) {
-            return ((Method)ao).getReturnType();
+    public static<T> ViewInserterHolder<T> fromView(View view, T item) {
+        ViewInserterHolder<T> holder = (ViewInserterHolder<T>) view.getTag();
+        if (holder == null) {
+            holder = (ViewInserterHolder<T>) new ViewInserterHolder<>(view, item.getClass());
+            view.setTag(holder);
         }
 
-        return null; // never happens.
+        return holder;
+    }
+
+    public void extractDataTo(T destinationObject) {
+        for (AnnotationFilter.Entry e : filter.getFields()) {
+            InsertTo ann = (InsertTo) e.getAnn(InsertTo.class);
+            InsertTo.AllowSave save = ann.save();
+
+            if (save.allowed()) {
+                try {
+                    setFieldValue(destinationObject, e, ann);
+                } catch (IllegalAccessException e1) {
+                    e1.printStackTrace();
+                } catch (InvocationTargetException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void setFieldValue(T destinationObject, AnnotationFilter.Entry e, InsertTo ann)
+            throws IllegalAccessException, InvocationTargetException {
+        InsertTo.AllowSave save = ann.save();
+        if (!save.saveMethodName().isEmpty()) {
+            Class argumentClass = save.saveMethodArgument();
+            if (argumentClass == void.class) {
+                argumentClass = e.getReturnType();
+            }
+            Method meth = MethodResolver.getMethodFor(save.saveMethodName(),
+                    argumentClass, destinationObject.getClass());
+            meth.invoke(destinationObject, getValueFromView(ann));
+        } else {
+            Object valueFromView = getValueFromView(ann);
+
+            if (!e.getReturnType().isAssignableFrom(valueFromView.getClass())) {
+                 valueFromView = DialogFieldEntry
+                        // TODO this is valueOf(String) only, provide type depentent solution.
+                        .getValueOfForClass(e.getReturnType())
+                        .invoke(destinationObject, valueFromView.toString());
+            }
+
+            e.setValue(destinationObject, valueFromView);
+        }
+    }
+
+    private Object getValueFromView(InsertTo ann) {
+        InsertTo.AllowSave save = ann.save();
+        View view = idToViewMap.get(ann.id());
+
+        Class viewClass = save.viewMethodClass();
+        if (viewClass == void.class) viewClass = view.getClass();
+
+        String methodName = save.viewMethodName();
+        if (methodName.isEmpty()) {
+            methodName = getDefaultMethodForClass(viewClass);
+        }
+
+        Method meth = MethodResolver.getMethodFor(methodName,
+                void.class, viewClass);
+
+        try {
+            return meth.invoke(view);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /** Some basic methods, this section should be larger probably. */
+    private String getDefaultMethodForClass(Class viewClass) {
+        if (TextView.class.isAssignableFrom(viewClass)) {
+            return "getText";
+        }
+
+        if (CheckBox.class.isAssignableFrom(viewClass)) {
+            return "isChecked";
+        }
+
+        return "";
     }
 }

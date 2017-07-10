@@ -1,25 +1,22 @@
 package adinar.annotationsutils.viewinserter;
 
 
-import android.util.LruCache;
+import android.support.v4.util.LruCache;
 
 import java.lang.reflect.Method;
 
-public class ViewMethodResolver {
-    private static final ViewMethodResolver ourInstance = new ViewMethodResolver();
+import adinar.annotationsutils.objectdialog.PrimitiveToObjectConverter;
+
+public class MethodResolver {
     private static final int MAX_LRU_CACHE = 1000000;
-    private static final String TAG = "ViewMethodResolver";
+    private static final String TAG = "MethodResolver";
 
-    public static ViewMethodResolver getInstance() {
-        return ourInstance;
+    private MethodResolver() {
     }
 
-    private ViewMethodResolver() {
-    }
+    private static LruCache<MethodEntry, Method> cache = new LruCache<>(MAX_LRU_CACHE);
 
-    private LruCache<MethodEntry, Method> cache = new LruCache<>(MAX_LRU_CACHE);
-
-    private class MethodEntry {
+    private static class MethodEntry {
         String methodName;
         Class argumentClass;
         Class methodClass;
@@ -51,7 +48,7 @@ public class ViewMethodResolver {
         }
     }
 
-    private class MethodRecursiveSearch {
+    private static class MethodRecursiveSearch {
         private String methodName;
         private Class argumentClass;
         private Class orgMethodClass;
@@ -83,7 +80,11 @@ public class ViewMethodResolver {
 
             Method meth;
             try {
-                meth = methodClass.getDeclaredMethod(methodName, argumentClass);
+                if (argumentClass == void.class) {
+                    meth = methodClass.getDeclaredMethod(methodName);
+                } else {
+                    meth = methodClass.getDeclaredMethod(methodName, argumentClass);
+                }
             } catch (NoSuchMethodException e) {
                 meth = getMethod(methodClass.getSuperclass());
             }
@@ -92,7 +93,7 @@ public class ViewMethodResolver {
             return meth;
         }
     }
-    public Method getMethodFor(String methodName, Class argumentClass, Class methodClass) {
+    public static Method getMethodFor(String methodName, Class argumentClass, Class methodClass) {
         MethodRecursiveSearch mrs = new MethodRecursiveSearch(methodName, argumentClass, methodClass);
         return mrs.getMethod(methodClass);
     }
@@ -104,5 +105,30 @@ public class ViewMethodResolver {
         public NoSuchMethodExceptionRuntime(String format) {
             super(format);
         }
+    }
+
+    public static Method getMethodAndCheckHeuristics(String methodName,
+                                                     Class argumentClass, Class methodClass) {
+        Method meth;
+        // @meth is a view method like EditText.getText(), value of item field / method
+        // will be applied to it.
+        try {
+            meth = getMethodFor(methodName, argumentClass, methodClass);
+        } catch (MethodResolver.NoSuchMethodExceptionRuntime e1) {
+            // Heuristic, many Android Views methods that take text
+            // takes CharSequence as argument.
+            if (argumentClass == String.class) {
+                meth = getMethodFor(methodName, CharSequence.class, methodClass);
+            } else {
+                // Another heuristic, because Integer.class != int.class we should check it...
+                Class objectClass = PrimitiveToObjectConverter.getObjectClass(argumentClass);
+                if (objectClass != argumentClass) {
+                    meth = getMethodFor(methodName, objectClass, methodClass);
+                } else {
+                    throw e1;
+                }
+            }
+        }
+        return meth;
     }
 }

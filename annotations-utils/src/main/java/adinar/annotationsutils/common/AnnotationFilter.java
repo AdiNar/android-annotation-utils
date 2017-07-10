@@ -66,6 +66,9 @@ public class AnnotationFilter {
         return entry;
     }
 
+    /**  */
+    // This is a very ugly implementation, it was first designed as a class for AnnotatedElements as
+    // a whole but then some Field/Method specific methods appeared, this logic should be divided.
     public static class Entry<T extends AnnotatedElement> {
         /** Field, Method or Class. */
         private T obj;
@@ -82,7 +85,8 @@ public class AnnotationFilter {
         }
 
         public<S extends Annotation> S getAnn(Class<S> clazz) {
-            return clazz.cast(anns.get(clazz));
+            Annotation obj = anns.get(clazz);
+            return obj == null ? null : clazz.cast(obj);
         }
 
         /** Value is extracted from method or field.
@@ -105,6 +109,24 @@ public class AnnotationFilter {
 
         public boolean isEmpty() {
             return anns.isEmpty();
+        }
+
+        public Class getReturnType() {
+            AccessibleObject ao = (AccessibleObject) getObj();
+            if (ao instanceof Field) {
+                return ((Field)ao).getType();
+            }
+            if (ao instanceof Method) {
+                return ((Method)ao).getReturnType();
+            }
+
+            return null; // never happens.
+        }
+
+        public void setValue(Object dstObject, Object valueFromView) throws IllegalAccessException {
+            if (getObj() instanceof Field) {
+                FieldAndMethodAccess.setFieldValue((Field) getObj(), dstObject, valueFromView);
+            }
         }
     }
 

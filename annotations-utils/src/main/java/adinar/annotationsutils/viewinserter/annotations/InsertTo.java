@@ -15,7 +15,8 @@ public @interface InsertTo {
     // method to call on view from above call - findViewById(id()).<method()>
     String method() default "setText";
     // class which contains method(), by default processor will look for it
-    // in spotted view and its superclasses.
+    // in spotted view and its superclasses. Use it only when method is contained by Interface,
+    // so it won't be matched by recursive algorithm.
     Class methodClass() default void.class;
     // class of argument taken by method(). Important because processor needs exact argument class,
     // not it subclass or parent.
@@ -31,8 +32,10 @@ public @interface InsertTo {
     @Retention(RetentionPolicy.RUNTIME)
     @interface AllowSave {
        boolean allowed() default true;
-       String methodName() default "";
-       Class methodArgument() default void.class;
+       String saveMethodName() default "";
+       Class saveMethodArgument() default void.class;
+       String viewMethodName() default "";
+       Class viewMethodClass() default void.class;
     }
 
     AllowSave save() default @AllowSave(allowed=false);
