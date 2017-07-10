@@ -33,7 +33,7 @@ public class AnnotationFilterTest {
                 .addAnnotation(AnAnnotation.class)
                 .filter();
 
-        AnnotationFilter.Entry<Field> field = filter.getFields().get(0);
+        AnnotationFilter.AnnotationFilterEntry<Field> field = filter.getFields().get(0);
         Assert.assertNotNull(field.getAnn(AnAnnotation.class));
     }
 

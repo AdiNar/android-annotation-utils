@@ -1,24 +1,26 @@
 package adinar.annotationsutils.common;
 
 
+import android.support.annotation.NonNull;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class AnnotationFilter {
+public abstract class AnnotationFilter<
+        FE extends FieldEntry,
+        ME extends MethodEntry,
+        CE extends ClassEntry> {
     private static final String TAG = "AnnotationFilter";
     private Class clazz;
 
-    private Entry<Class> classAnns;
-    private List<Entry<Field>> fieldAnns;
-    private List<Entry<Method>> methAnns;
+    private CE classAnns;
+    private List<FE> fieldAnns;
+    private List<ME> methAnns;
 
     private List<Class<? extends Annotation>> allowedAnnotations;
 
@@ -37,113 +39,58 @@ public class AnnotationFilter {
 
     public AnnotationFilter filter() {
         for (Field f : clazz.getDeclaredFields()) {
-            Entry entry = extractAnnsFrom(f);
+            FE entry = getFieldEntryInstance(f);
+            extractAnns(f, entry);
             if (!entry.isEmpty()) {
                 fieldAnns.add(entry);
             }
         }
 
         for (Method m : clazz.getDeclaredMethods()) {
-            Entry entry = extractAnnsFrom(m);
+            ME entry = getMethodEntryInstance(m);
+            extractAnns(m, entry);
             if (!entry.isEmpty()) {
                 methAnns.add(entry);
             }
         }
 
-        classAnns = extractAnnsFrom(clazz);
+        CE entry = getClassEntryInstance(clazz);
+        extractAnns(clazz, entry);
 
         return this;
     }
 
-    private<T extends AnnotatedElement> Entry<T> extractAnnsFrom(T obj) {
-        Entry<T> entry = new Entry<>(obj);
+    @NonNull
+    protected abstract CE getClassEntryInstance(Class c);
+
+    @NonNull
+    protected abstract ME getMethodEntryInstance(Method m);
+
+    @NonNull
+    protected abstract FE getFieldEntryInstance(Field f);
+
+    private<T extends AnnotatedElement> void extractAnns(T obj, AnnotationFilterEntry entry) {
         for (Annotation a : obj.getAnnotations()) {
             if (allowedAnnotations.contains(a.annotationType())) {
                 entry.addAnn(a);
             }
         }
-
-        return entry;
     }
 
-    /**  */
-    // This is a very ugly implementation, it was first designed as a class for AnnotatedElements as
-    // a whole but then some Field/Method specific methods appeared, this logic should be divided.
-    public static class Entry<T extends AnnotatedElement> {
-        /** Field, Method or Class. */
-        private T obj;
-        /** Instances of {@link Annotation}s that @obj fields contains, filtered. */
-        private Map<Class<? extends Annotation>, Annotation> anns;
-
-        public Entry(T obj) {
-            this.obj = obj;
-            anns = new HashMap<>();
-        }
-
-        public void addAnn(Annotation ann) {
-            anns.put(ann.annotationType(), ann);
-        }
-
-        public<S extends Annotation> S getAnn(Class<S> clazz) {
-            Annotation obj = anns.get(clazz);
-            return obj == null ? null : clazz.cast(obj);
-        }
-
-        /** Value is extracted from method or field.
-          * @param itemInstance: Object to get value from. */
-        public Object getValue(Object itemInstance) {
-            try {
-                return FieldAndMethodAccess.getValue(obj, itemInstance);
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        public T getObj() {
-            return obj;
-        }
-
-        public boolean isEmpty() {
-            return anns.isEmpty();
-        }
-
-        public Class getReturnType() {
-            AccessibleObject ao = (AccessibleObject) getObj();
-            if (ao instanceof Field) {
-                return ((Field)ao).getType();
-            }
-            if (ao instanceof Method) {
-                return ((Method)ao).getReturnType();
-            }
-
-            return null; // never happens.
-        }
-
-        public void setValue(Object dstObject, Object valueFromView) throws IllegalAccessException {
-            if (getObj() instanceof Field) {
-                FieldAndMethodAccess.setFieldValue((Field) getObj(), dstObject, valueFromView);
-            }
-        }
-    }
-
-    public List<Entry<Field>> getFields() {
+    public List<FE> getFields() {
         return fieldAnns;
     }
 
-    public List<Entry<Method>> getMethods() {
+    public List<ME> getMethods() {
         return methAnns;
     }
 
-    public Entry<Class> getClassAnns() {
+    public CE getClassAnns() {
         return classAnns;
     }
 
-    public List<Entry<? extends AccessibleObject>> getAllAnnotated() {
-        List<Entry<? extends AccessibleObject>> all = new ArrayList<>();
+    public List<AnnotationFilterEntry<? extends AccessibleObject>> getAllAnnotated() {
+        List<AnnotationFilterEntry<? extends AccessibleObject>> all = new ArrayList<>();
         all.addAll(fieldAnns);
         all.addAll(methAnns);
 
