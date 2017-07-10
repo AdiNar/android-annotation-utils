@@ -43,5 +43,9 @@
             android:name=".viewinserter.ViewInserterSimpleExample"
             android:windowSoftInputMode="adjustResize">
         </activity>
+        <activity
+            android:name=".viewinserter.ViewInserterSaveExample"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
     </application>
 </manifest>

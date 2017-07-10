@@ -9,6 +9,7 @@ public class ViewInserterExamplesList  extends ExampleListActivity {
     protected Entry[] getEntries() {
         return new Entry[] {
             new Entry("Simple", ViewInserterSimpleExample.class),
+            new Entry("Save", ViewInserterSaveExample.class),
         };
     }
 }

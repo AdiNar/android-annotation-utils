@@ -9,4 +9,6 @@
     <string name="phone">Phone</string>
     <string name="citizens">Citizens</string>
     <string name="must_be_ge_0"><![CDATA[Number must be > 0!]]></string>
+    <string name="save">Save!</string>
+    <string name="save_example_info">After you click the button data from above will be saved to object and then injected into view below.</string>
 </resources>
