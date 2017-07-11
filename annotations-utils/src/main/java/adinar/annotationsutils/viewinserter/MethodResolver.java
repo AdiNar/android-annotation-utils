@@ -64,7 +64,8 @@ public class MethodResolver {
                 throw new NoSuchMethodExceptionRuntime(
                         String.format("Method %s(%s) was not found in " +
                                 "%s and it's superclasses. " +
-                                "Ensure method argument type is exactly matching! %s",
+                                "Ensure method argument type is exactly matching or " +
+                                        "use asString in annotation. %s",
                         methodName,
                         String.valueOf(argumentClass),
                         String.valueOf(orgMethodClass),
