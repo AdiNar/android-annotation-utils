@@ -21,8 +21,9 @@ public class FieldAndMethodAccess {
         }
     }
 
-    public static String getStringFieldValue(Field field, Object object) throws IllegalAccessException {
-        Object value = getFieldValue(field, object);
+    public static String getStringMethodValue(Method method, Object object) throws
+            IllegalAccessException, InvocationTargetException {
+        Object value = getMethodValue(method, object);
         return String.valueOf(value == null ? "" : value);
     }
 
@@ -46,5 +47,10 @@ public class FieldAndMethodAccess {
         } finally {
             method.setAccessible(access);
         }
+    }
+
+    public static String getStringFieldValue(Field field, Object object) throws IllegalAccessException {
+        Object value = getFieldValue(field, object);
+        return String.valueOf(value == null ? "" : value);
     }
 }
