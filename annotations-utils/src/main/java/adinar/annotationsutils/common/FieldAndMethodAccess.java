@@ -47,20 +47,4 @@ public class FieldAndMethodAccess {
             method.setAccessible(access);
         }
     }
-
-    /** Value is extracted from method or field.
-     * @param accessibleObject field or no-arg method of @itemInstance to obtain.
-     * @param itemInstance: Object to get value from. */
-    public static Object getValue(Object accessibleObject, Object itemInstance)
-            throws InvocationTargetException, IllegalAccessException {
-        if (accessibleObject.getClass() == Method.class) {
-            return getMethodValue((Method)accessibleObject, itemInstance);
-        }
-
-        if (accessibleObject.getClass() == Field.class) {
-            return getFieldValue((Field) accessibleObject, itemInstance);
-        }
-
-        return null;
-    }
 }
