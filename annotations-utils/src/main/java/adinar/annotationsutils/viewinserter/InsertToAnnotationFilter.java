@@ -11,7 +11,7 @@ import adinar.annotationsutils.common.ClassEntry;
 import adinar.annotationsutils.viewinserter.annotations.InsertTo;
 
 public class InsertToAnnotationFilter extends
-        AnnotationFilter<InsertToFieldEntry, InsertToMethodEntry, ClassEntry> {
+        AnnotationFilter<InsertToFieldEntry, InsertToMethodEntry> {
     public static final String TAG = "InsertToAnnotationFilter";
 
     public InsertToAnnotationFilter(Class clazz) {

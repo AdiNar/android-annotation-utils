@@ -6,10 +6,10 @@ import android.view.View;
 public abstract class Validator<T extends View> {
     protected T view;
 
-    public final boolean isValidChain() {
+    public final boolean isValid() {
         boolean result = false;
 
-        if(!isValid()) {
+        if(!isValidSingle()) {
             setErrorMessageInView();
         } else {
             result = true;
@@ -18,8 +18,8 @@ public abstract class Validator<T extends View> {
         return (next == null || next.isValid()) && result;
     }
 
-    protected abstract boolean isValid();
-    abstract void setErrorMessageInView();
+    protected abstract boolean isValidSingle();
+    protected abstract void setErrorMessageInView();
 
     private Validator next;
 

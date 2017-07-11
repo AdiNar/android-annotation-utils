@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public class DefaultAnnotationFilter extends
-        AnnotationFilter<FieldEntry, MethodEntry, ClassEntry> {
+        AnnotationFilter<FieldEntry, MethodEntry> {
     public static final String TAG = "DefaultAnnotationFilter";
 
     public DefaultAnnotationFilter(Class clazz) {

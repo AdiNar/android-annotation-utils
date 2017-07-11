@@ -4,7 +4,6 @@ package adinar.annotationsutils.common;
 import android.support.annotation.NonNull;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -13,12 +12,11 @@ import java.util.List;
 
 public abstract class AnnotationFilter<
         FE extends FieldEntry,
-        ME extends MethodEntry,
-        CE extends ClassEntry> {
+        ME extends MethodEntry> {
     private static final String TAG = "AnnotationFilter";
     private Class clazz;
 
-    private CE classAnns;
+    private ClassEntry classAnns;
     private List<FE> fieldAnns;
     private List<ME> methAnns;
 
@@ -54,14 +52,14 @@ public abstract class AnnotationFilter<
             }
         }
 
-        CE entry = getClassEntryInstance(clazz);
+        ClassEntry entry = getClassEntryInstance(clazz);
         extractAnns(clazz, entry);
 
         return this;
     }
 
     @NonNull
-    protected abstract CE getClassEntryInstance(Class c);
+    protected abstract ClassEntry getClassEntryInstance(Class c);
 
     @NonNull
     protected abstract ME getMethodEntryInstance(Method m);
@@ -85,12 +83,12 @@ public abstract class AnnotationFilter<
         return methAnns;
     }
 
-    public CE getClassAnns() {
+    public ClassEntry getClassAnns() {
         return classAnns;
     }
 
-    public List<AnnotationFilterEntry<? extends AccessibleObject>> getAllAnnotated() {
-        List<AnnotationFilterEntry<? extends AccessibleObject>> all = new ArrayList<>();
+    public List<? extends AnnotationFilterEntryWithValue> getAllAnnotated() {
+        List<AnnotationFilterEntryWithValue> all = new ArrayList<>();
         all.addAll(fieldAnns);
         all.addAll(methAnns);
 

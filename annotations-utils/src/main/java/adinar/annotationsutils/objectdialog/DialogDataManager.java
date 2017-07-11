@@ -58,7 +58,7 @@ class DialogDataManager<T> {
                 dialogButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (validatorBuilder.build().isValidChain()) {
+                        if (validatorBuilder.build().isValid()) {
                             for (DialogFieldEntry<T> e : data.getFields()) {
                                 e.setFieldValueFromView();
                             }

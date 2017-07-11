@@ -8,15 +8,14 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import adinar.annotationsutils.common.AnnotationFilter;
-import adinar.annotationsutils.common.AnnotationFilterEntry;
-import adinar.annotationsutils.common.DefaultAnnotationFilter;
+import adinar.annotationsutils.common.AnnotationFilterEntryWithValue;
 import adinar.annotationsutils.common.FieldEntry;
 import adinar.annotationsutils.objectdialog.DialogFieldEntry;
 import adinar.annotationsutils.viewinserter.annotations.InsertTo;
@@ -24,14 +23,14 @@ import adinar.annotationsutils.viewinserter.annotations.InsertTo;
 public class ViewInserterHolder<T> extends RecyclerView.ViewHolder {
     private static final String TAG = "ViewInserterHolder";
     private SparseArray<View> idToViewMap = new SparseArray<>();
-    private static Map<Class, AnnotationFilter> cache;
-    private AnnotationFilter filter;
+    private static Map<Class, InsertToAnnotationFilter> cache;
+    private InsertToAnnotationFilter filter;
 
     static {
         cache = new HashMap<>();
     }
 
-    public ViewInserterHolder(View view, AnnotationFilter filter) {
+    public ViewInserterHolder(View view, InsertToAnnotationFilter filter) {
         super(view);
         this.filter = filter;
         matchIdsWithViews(view, filter);
@@ -41,10 +40,10 @@ public class ViewInserterHolder<T> extends RecyclerView.ViewHolder {
         this(view, getAnnotationFilter(clazz));
     }
 
-    private static<T> AnnotationFilter getAnnotationFilter(Class<T> clazz) {
-        AnnotationFilter filter = cache.get(clazz);
+    private static<T> InsertToAnnotationFilter getAnnotationFilter(Class<T> clazz) {
+        InsertToAnnotationFilter filter = cache.get(clazz);
         if (filter == null) {
-            filter = new InsertToAnnotationFilter(clazz).filter();
+            filter = (InsertToAnnotationFilter) new InsertToAnnotationFilter(clazz).filter();
             cache.put(clazz, filter);
         }
         return filter;
@@ -52,8 +51,9 @@ public class ViewInserterHolder<T> extends RecyclerView.ViewHolder {
 
     /** Look for all ids used in annotations and cache their views. */
     private void matchIdsWithViews(View view, AnnotationFilter filter) {
-        for (AnnotationFilterEntry e : filter.getAllAnnotated()) {
-            InsertTo ann = (InsertTo) e.getAnn(InsertTo.class);
+        List<FieldEntry> fields = filter.getAllAnnotated();
+        for (FieldEntry e : fields) {
+            InsertTo ann = e.getAnn(InsertTo.class);
             View annView = view.findViewById(ann.id());
             if (annView != null) idToViewMap.put(ann.id(), annView);
         }
@@ -72,8 +72,8 @@ public class ViewInserterHolder<T> extends RecyclerView.ViewHolder {
                            final OnInsertedViewClickListener<T> listener,
                            final int itemId) {
 
-        for (AnnotationFilterEntry<? extends AccessibleObject> e : filter.getAllAnnotated()) {
-            InsertTo ann = e.getAnn(InsertTo.class);
+        for (AnnotationFilterEntryWithValue e : filter.getAllAnnotated()) {
+            InsertTo ann = (InsertTo) e.getAnn(InsertTo.class);
             View dst = idToViewMap.get(ann.id());
 
             if (dst == null) {
@@ -120,7 +120,7 @@ public class ViewInserterHolder<T> extends RecyclerView.ViewHolder {
         return methodClass;
     }
 
-    private Class getArgumentClass(AnnotationFilterEntry e, InsertTo ann) {
+    private Class getArgumentClass(AnnotationFilterEntryWithValue e, InsertTo ann) {
         Class argumentClass = ann.argumentClass();
         if (ann.asString()) {
             argumentClass = String.class;
@@ -141,7 +141,9 @@ public class ViewInserterHolder<T> extends RecyclerView.ViewHolder {
 
     public void extractDataTo(T destinationObject) {
         for (FieldEntry e : filter.getFields()) {
-            InsertTo.AllowSave save = e.getSaveAnnotation();
+            InsertTo ann = e.getAnn(InsertTo.class);
+            InsertTo.AllowSave save = ann.save();
+
 
             if (save.allowed()) {
                 try {
@@ -155,7 +157,7 @@ public class ViewInserterHolder<T> extends RecyclerView.ViewHolder {
         }
     }
 
-    private void setFieldValue(T destinationObject, AnnotationFilterEntry e, InsertTo ann)
+    private void setFieldValue(T destinationObject, FieldEntry e, InsertTo ann)
             throws IllegalAccessException, InvocationTargetException {
         InsertTo.AllowSave save = ann.save();
         if (!save.saveMethodName().isEmpty()) {

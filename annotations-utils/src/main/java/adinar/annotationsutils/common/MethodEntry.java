@@ -4,7 +4,7 @@ package adinar.annotationsutils.common;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class MethodEntry extends AnnotationFilterEntry<Method> {
+public class MethodEntry extends AnnotationFilterEntryWithValue<Method> {
     public static final String TAG = "MethodEntry";
 
     public MethodEntry(Method method) {
@@ -20,10 +20,5 @@ public class MethodEntry extends AnnotationFilterEntry<Method> {
     @Override
     public Class getReturnType() {
         return getObj().getReturnType();
-    }
-
-    @Override
-    public void setValue(Object dstObject, Object valueFromView) throws IllegalAccessException {
-        throw new RuntimeException("setValue is not allowed on methods!");
     }
 }

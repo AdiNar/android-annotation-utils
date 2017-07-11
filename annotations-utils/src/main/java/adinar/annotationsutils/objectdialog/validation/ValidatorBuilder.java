@@ -8,12 +8,12 @@ public class ValidatorBuilder {
     public ValidatorBuilder() {
         first = current = new Validator() {
             @Override
-            protected boolean isValid() {
+            protected boolean isValidSingle() {
                 return true;
             }
 
             @Override
-            void setErrorMessageInView() {}
+            protected void setErrorMessageInView() {}
         };
     }
 

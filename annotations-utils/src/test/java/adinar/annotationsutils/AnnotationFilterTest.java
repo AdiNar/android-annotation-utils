@@ -9,16 +9,17 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.reflect.Field;
 
 import adinar.annotationsutils.common.AnnotationFilter;
+import adinar.annotationsutils.common.DefaultAnnotationFilter;
+import adinar.annotationsutils.common.FieldEntry;
 
 
 public class AnnotationFilterTest {
 
     @Test
     public void testFiltering() {
-        AnnotationFilter filter = new AnnotationFilter(TestClass.class)
+        AnnotationFilter filter = new DefaultAnnotationFilter(TestClass.class)
                 .addAnnotation(AnAnnotation.class)
                 .filter();
 
@@ -29,17 +30,17 @@ public class AnnotationFilterTest {
 
     @Test
     public void testEntries() {
-        AnnotationFilter filter = new AnnotationFilter(TestClass.class)
+        AnnotationFilter filter = new DefaultAnnotationFilter(TestClass.class)
                 .addAnnotation(AnAnnotation.class)
                 .filter();
 
-        AnnotationFilter.AnnotationFilterEntry<Field> field = filter.getFields().get(0);
+        FieldEntry field = (FieldEntry) filter.getFields().get(0);
         Assert.assertNotNull(field.getAnn(AnAnnotation.class));
     }
 
     @Test
     public void testEmptyFilter() {
-        AnnotationFilter filter = new AnnotationFilter(TestClass.class).filter();
+        AnnotationFilter filter = new DefaultAnnotationFilter(TestClass.class).filter();
 
         Assert.assertEquals(0, filter.getFields().size());
         Assert.assertEquals(0, filter.getMethods().size());

@@ -4,17 +4,17 @@ import java.math.BigDecimal;
 
 /** Set of validator classes that handles numbers. */
 public class NumberValidators {
-    public abstract static class NumberValidator<T extends Number> extends TextViewValidator {
-        protected abstract boolean isValid(Number number);
+    public abstract static class NumberValidator extends TextViewValidator {
+        protected abstract boolean isValid(BigDecimal number);
 
         @Override
         protected boolean isValid(String input) {
-            Number number = parseNumber(input);
+            BigDecimal number = parseNumber(input);
             if (number == null) return false;
             return isValid(number);
         }
 
-        private Number parseNumber(String input) {
+        private BigDecimal parseNumber(String input) {
             try {
                 return new BigDecimal(input);
             } catch (NumberFormatException e) {
@@ -24,11 +24,10 @@ public class NumberValidators {
         }
     }
 
-    public static class GE_NumberValidator<T extends Number> extends NumberValidator<T> {
-
+    public static class GE_NumberValidator extends NumberValidator {
         @Override
-        protected boolean isValid(Number number) {
-            return number.longValue() >= 0;
+        protected boolean isValid(BigDecimal number) {
+            return number.signum() >= 0;
         }
     }
 }

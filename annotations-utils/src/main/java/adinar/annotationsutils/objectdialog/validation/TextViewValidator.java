@@ -12,7 +12,7 @@ public abstract class TextViewValidator extends Validator<TextView> {
 
     public TextViewValidator() {}
 
-    public boolean isValid() {
+    public boolean isValidSingle() {
         return isValid(view.getText().toString());
     }
 
