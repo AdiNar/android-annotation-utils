@@ -87,11 +87,22 @@ public class MethodResolver {
                     meth = methodClass.getDeclaredMethod(methodName, argumentClass);
                 }
             } catch (NoSuchMethodException e) {
-                meth = getMethod(methodClass.getSuperclass());
+                meth = checkForMethodWithPrimitiveArgument(methodClass);
+                if (meth == null) meth = getMethod(methodClass.getSuperclass());
             }
 
             cache.put(entry, meth);
             return meth;
+        }
+
+        private Method checkForMethodWithPrimitiveArgument(Class methodClass) {
+            if (PrimitiveToObjectConverter.hasPrimitive(argumentClass)) {
+                try {
+                    return methodClass.getDeclaredMethod(methodName,
+                            PrimitiveToObjectConverter.getPrimitiveClass(argumentClass));
+                } catch (NoSuchMethodException e1) {}
+            }
+            return null;
         }
     }
     public static Method getMethodFor(String methodName, Class argumentClass, Class methodClass) {

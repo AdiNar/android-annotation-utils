@@ -45,4 +45,8 @@ public class PrimitiveToObjectConverter {
             return objectClass;
         }
     }
+
+    public static boolean hasPrimitive(Class clazz) {
+        return clazz != getPrimitiveClass(clazz);
+    }
 }

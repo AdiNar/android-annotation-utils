@@ -4,6 +4,7 @@ package adinar.annotationsutils;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import junit.framework.Assert;
@@ -16,7 +17,6 @@ import adinar.annotationsutils.viewinserter.ViewInserterProcessor;
 import adinar.annotationsutils.viewinserter.annotations.InsertTo;
 
 import static android.support.test.InstrumentationRegistry.getContext;
-import static junit.framework.Assert.fail;
 
 @RunWith(AndroidJUnit4.class)
 public class ViewInserterProcessorTest {
@@ -49,6 +49,20 @@ public class ViewInserterProcessorTest {
         TextView tv = (TextView) view.findViewById(R.id.int1);
         Assert.assertEquals(String.valueOf(obj.int1), tv.getText());
     }
+
+    @Test
+    public void testCustomMethod() {
+        AdvancedTestClass obj = new AdvancedTestClass();
+
+        View view = LayoutInflater.from(getContext())
+            .inflate(R.layout.test_view_inserter_processor_advanced, null);
+
+        ViewInserterProcessor.insertInto(view, obj);
+
+        SeekBar seekBar = (SeekBar) view.findViewById(R.id.seekBar1);
+        Assert.assertEquals((int) obj.seekBarMax, seekBar.getMax());
+        Assert.assertEquals((int) obj.seekBarProgress, seekBar.getProgress());
+    }
 }
 
 class TestClass {
@@ -62,5 +76,13 @@ class TestClass {
 class FailTestClass {
     // This is wrong, no matching method.
     @InsertTo(id = R.id.int1)
-    Integer int1 = 1;
+    Double int1 = 1.0;
+}
+
+class AdvancedTestClass {
+    @InsertTo(id = R.id.seekBar1, method = "setProgress")
+    Integer seekBarProgress = 34;
+
+    @InsertTo(id = R.id.seekBar1, method = "setMax")
+    Integer seekBarMax = 200;
 }
