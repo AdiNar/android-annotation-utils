@@ -92,11 +92,14 @@ public class ViewInserterHolder<T> extends RecyclerView.ViewHolder {
             try {
                 Object value = e.getValue(item);
 
-                if (ann.asString()) {
-                    value = value.toString();
+                if (value != null) {
+                    if (ann.asString()) {
+                        value = value.toString();
+                    }
+
+                    meth.invoke(dst, value);
                 }
 
-                meth.invoke(dst, value);
             } catch (IllegalAccessException e1) {
                 e1.printStackTrace();
             } catch (InvocationTargetException e1) {

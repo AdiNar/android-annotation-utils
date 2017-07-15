@@ -65,7 +65,7 @@ public class MethodResolver {
                         String.format("Method %s(%s) was not found in " +
                                 "%s and it's superclasses. " +
                                 "Ensure method argument type is exactly matching or " +
-                                        "use asString in annotation. %s",
+                                        ">>> use asString in annotation. <<< %s",
                         methodName,
                         String.valueOf(argumentClass),
                         String.valueOf(orgMethodClass),
