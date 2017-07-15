@@ -7,14 +7,14 @@ import adinar.annotationsutils.viewinserter.annotations.InsertTo;
 public class Data {
 
     public Data() {
-        boolValue = true;
+        isChecked = true;
         checkBoxTitle = "CheckBoxTitle";
         progress = 70;
         hint = "Nice hint!";
     }
 
     @InsertTo(id = R.id.checkBox, method = "setChecked")
-    private boolean boolValue;
+    private boolean isChecked;
 
     @InsertTo(id = R.id.checkBox)
     private String checkBoxTitle;
