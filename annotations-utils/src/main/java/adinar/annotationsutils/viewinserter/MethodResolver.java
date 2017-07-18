@@ -5,7 +5,7 @@ import android.support.v4.util.LruCache;
 
 import java.lang.reflect.Method;
 
-import adinar.annotationsutils.objectdialog.PrimitiveToObjectConverter;
+import adinar.annotationsutils.common.PrimitiveToObjectConverter;
 
 public class MethodResolver {
     private static final int MAX_LRU_CACHE = 1000000;

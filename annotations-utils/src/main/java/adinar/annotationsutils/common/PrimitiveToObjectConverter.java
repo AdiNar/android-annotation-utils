@@ -1,4 +1,4 @@
-package adinar.annotationsutils.objectdialog;
+package adinar.annotationsutils.common;
 
 
 import java.util.HashMap;

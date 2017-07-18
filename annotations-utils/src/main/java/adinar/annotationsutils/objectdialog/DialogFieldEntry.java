@@ -11,10 +11,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import adinar.annotationsutils.common.FieldAndMethodAccess;
+import adinar.annotationsutils.common.PrimitiveToObjectConverter;
 import adinar.annotationsutils.objectdialog.validation.Validator;
 import adinar.annotationsutils.objectdialog.validation.ValidatorBuilder;
 
-/**  */
+/** Wrapper for field, provides useful methods to manage field's value and creates view
+ *  for this field. */
 public abstract class DialogFieldEntry<T> {
     private static final String TAG = "DialogFieldEntry";
     protected final Context ctx;
@@ -60,7 +62,7 @@ public abstract class DialogFieldEntry<T> {
                     }
                 } catch (NoSuchMethodException e) {
                     throw new RuntimeException(String.format("Class %s should implement static " +
-                            "method valueOf(String)", clazz));
+                            "method valueOf(String)", clazz), e);
                 }
             }
 
@@ -69,7 +71,7 @@ public abstract class DialogFieldEntry<T> {
 
     private static Method getStringIdMethod() throws NoSuchMethodException {
         if (stringIdMethod == null) {
-            stringIdMethod = DialogFieldEntry.class.getMethod("stringId", String.class);
+            stringIdMethod = DialogFieldEntry.class.getDeclaredMethod("stringId", String.class);
         }
         return stringIdMethod;
     }

@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.util.LruCache;
 
+/** Main class containing methods to deal with dialogs. */
 public class DialogProcessor<T> {
     private Context ctx;
     private Dialog dialog;
@@ -21,6 +22,9 @@ public class DialogProcessor<T> {
         this.ctx = ctx;
     }
 
+    /** Creates dialog based on object's class annotations, applies listener
+     *  for dialog results and shows dialog.
+     *  @return Created dialog object, remember that it's already shown. */
     public Dialog createDialogFrom(T object, AnnotationDialogListener<T> listener) {
         DialogClassData<T> data = prepareDataForClass((Class<T>) object.getClass());
 
@@ -45,6 +49,7 @@ public class DialogProcessor<T> {
         if (dialog != null && dialog.isShowing()) dialog.hide();
     }
 
+    /** Caches class dialog data extracted from it's annotations. */
     private DialogClassData prepareDataForClass(Class<T> clazz) {
         if (cache.get(clazz) == null) {
             cache.put(clazz, new DialogClassData<>(clazz, ctx));

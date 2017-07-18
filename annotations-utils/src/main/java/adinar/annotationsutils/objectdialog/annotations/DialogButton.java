@@ -13,7 +13,10 @@ public @interface DialogButton {
     }
 
     ButtonType type() default ButtonType.POSITIVE;
-    int textId();
+
+    // 0 will be replaced with "OK" for POSITIVE button text because R.string.* cannot
+    // be provided here.
+    int textId() default 0;
 
     // needed for neutral buttons
     int buttonId() default -1;

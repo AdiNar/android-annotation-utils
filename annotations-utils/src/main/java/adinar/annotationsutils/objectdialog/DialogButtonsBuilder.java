@@ -4,6 +4,7 @@ package adinar.annotationsutils.objectdialog;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 
+import adinar.annotationsutils.R;
 import adinar.annotationsutils.objectdialog.annotations.DialogButton;
 
 /** Add buttons to {@link AlertDialog.Builder} and binds them to dialog listener. */
@@ -57,7 +58,12 @@ public class DialogButtonsBuilder<T> {
         if (pos != null) {
             // Listener is not set here because we want to decide whether dialog should
             // be closed on this click and such listener won't do that.
-            builder.setPositiveButton(pos.textId(), new DialogInterface.OnClickListener() {
+            int textId = pos.textId();
+
+            // That's a workaround, annotations need constant expression and R.string.OK cannot
+            // be passed there so it must be set here.
+            if (textId == 0) textId = R.string.OK;
+            builder.setPositiveButton(textId, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 

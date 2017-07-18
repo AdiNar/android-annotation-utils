@@ -51,9 +51,9 @@ public class ViewInserterHolder<T> extends RecyclerView.ViewHolder {
 
     /** Look for all ids used in annotations and cache their views. */
     private void matchIdsWithViews(View view, AnnotationFilter filter) {
-        List<FieldEntry> fields = filter.getAllAnnotated();
-        for (FieldEntry e : fields) {
-            InsertTo ann = e.getAnn(InsertTo.class);
+        List<AnnotationFilterEntryWithValue> fields = filter.getAllAnnotated();
+        for (AnnotationFilterEntryWithValue e : fields) {
+            InsertTo ann = (InsertTo) e.getAnn(InsertTo.class);
             View annView = view.findViewById(ann.id());
             if (annView != null) idToViewMap.put(ann.id(), annView);
         }
