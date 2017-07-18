@@ -7,7 +7,7 @@ import adinar.annotationsutils.objectdialog.annotations.DialogEditText;
 import adinar.annotationsutils.objectdialog.annotations.DialogTitle;
 
 @DialogClass(buttons = {@DialogButton(
-        textId = R.string.OK,
+        textId = R.string.add,
         type = DialogButton.ButtonType.POSITIVE)}
 )
 class Titled {

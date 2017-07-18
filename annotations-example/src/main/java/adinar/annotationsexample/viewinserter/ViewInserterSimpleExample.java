@@ -26,6 +26,7 @@ public class ViewInserterSimpleExample extends CustomTitleActivity {
         person = new Person("John", "Johnatansky", 20);
         viewToInsert = findViewById(R.id.person_layout);
 
+        /* Here the view is filled, it's just a one liner. */
         ViewInserterProcessor.insertInto(viewToInsert, person);
         
         Data data = new Data();

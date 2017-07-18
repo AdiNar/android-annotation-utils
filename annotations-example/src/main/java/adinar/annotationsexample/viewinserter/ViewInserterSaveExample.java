@@ -8,7 +8,7 @@ import adinar.annotationsexample.R;
 import adinar.annotationsexample.custom.CustomTitleActivity;
 import adinar.annotationsutils.viewinserter.ViewInserterProcessor;
 
-/** This example shows how to easily, with annotations make views able to save data to objects. */
+/** This example shows how to easily, with annotations, make views able to save data to objects. */
 public class ViewInserterSaveExample extends CustomTitleActivity {
     @Override
     public void onCreate(Bundle savedState) {
@@ -21,15 +21,15 @@ public class ViewInserterSaveExample extends CustomTitleActivity {
 
     private void init() {
         Juice juice = new Juice();
-        View viewToInsert;
-        viewToInsert = findViewById(R.id.src);
+        View viewToInsert = findViewById(R.id.src);
+
         ViewInserterProcessor.insertInto(viewToInsert, juice);
     }
 
     public void onButtonClick(View view) {
-        View viewToInsert;
+
         Juice newJuice = new Juice();
-        viewToInsert = findViewById(R.id.src);
+        View viewToInsert = findViewById(R.id.src);
 
         // Here is the main part, load data from view to object.
         // If there was already a tag holder created for view it will be reused,

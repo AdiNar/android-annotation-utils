@@ -40,9 +40,7 @@ public class DialogSimpleActivity<T> extends ActivityWithFab {
     protected void onFabClick() {
         T obj = getDataInstance();
 
-        Dialog dialog = getDialog(obj);
-
-        dialog.show();
+        getDialog(obj);
     }
 
     private Dialog getDialog(T obj) {

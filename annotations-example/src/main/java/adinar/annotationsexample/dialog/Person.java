@@ -8,9 +8,7 @@ import adinar.annotationsutils.objectdialog.validation.TextViewValidator;
 import adinar.annotationsutils.viewinserter.annotations.InsertTo;
 
 @DialogClass(title = "Person",
-        buttons = {@DialogButton(
-                textId = R.string.OK,
-                type = DialogButton.ButtonType.POSITIVE)}
+        buttons = {@DialogButton()}
 )
 public class Person {
     @InsertTo(id = R.id.name, asString = true)
