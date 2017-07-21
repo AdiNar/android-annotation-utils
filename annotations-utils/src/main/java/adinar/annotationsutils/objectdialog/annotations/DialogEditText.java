@@ -1,5 +1,7 @@
 package adinar.annotationsutils.objectdialog.annotations;
 
+import android.text.InputType;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -18,6 +20,9 @@ public @interface DialogEditText {
 
     int labelId() default 0;
     int hintId() default 0;
+
+    /** One of {@link InputType}. */
+    int inputType() default InputType.TYPE_CLASS_TEXT;
 
     @interface ETValidator {
         Class<? extends TextViewValidator> clazz();

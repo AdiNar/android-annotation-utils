@@ -31,6 +31,7 @@ class EditTextViewCreator extends DialogElementViewCreator<EditText> {
         EditText et = (EditText) view.findViewById(R.id.value);
         et.setText(entry.getFieldValue());
         et.setHint(entry.getHint());
+        et.setInputType(entry.getInputType());
         valueView = et;
 
         TextView tv = (TextView) view.findViewById(R.id.label);

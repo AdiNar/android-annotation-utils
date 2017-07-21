@@ -164,10 +164,8 @@ public class ViewInserterHolder<T> extends RecyclerView.ViewHolder {
             throws IllegalAccessException, InvocationTargetException {
         InsertTo.AllowSave save = ann.save();
         if (!save.saveMethodName().isEmpty()) {
-            Class argumentClass = save.saveMethodArgument();
-            if (argumentClass == void.class) {
-                argumentClass = e.getReturnType();
-            }
+            Class argumentClass = getSaveMethodArgument(e, save);
+
             Method meth = MethodResolver.getMethodFor(save.saveMethodName(),
                     argumentClass, destinationObject.getClass());
             meth.invoke(destinationObject, getValueFromView(ann));
@@ -183,6 +181,14 @@ public class ViewInserterHolder<T> extends RecyclerView.ViewHolder {
 
             e.setValue(destinationObject, valueFromView);
         }
+    }
+
+    private Class getSaveMethodArgument(FieldEntry e, InsertTo.AllowSave save) {
+        Class argumentClass = save.saveMethodArgument();
+        if (argumentClass == void.class) {
+            argumentClass = e.getReturnType();
+        }
+        return argumentClass;
     }
 
     private Object getValueFromView(InsertTo ann) {
@@ -211,7 +217,7 @@ public class ViewInserterHolder<T> extends RecyclerView.ViewHolder {
         return null;
     }
 
-    /** Some basic methods, this section should be larger probably. */
+    /** Some basic methods, this section should be larger probably. TODO */
     private String getDefaultMethodForClass(Class viewClass) {
         if (TextView.class.isAssignableFrom(viewClass)) {
             return "getText";

@@ -17,6 +17,7 @@ import adinar.annotationsutils.objectdialog.validation.ValidatorBuilder;
 
 class DialogEditTextFieldEntry<T> extends DialogFieldEntry<T> {
     private String hint, label;
+    private int inputType;
     private DialogEditText.ETValidator[] rawValidators;
     private EditTextViewCreator editTextViewCreator;
 
@@ -69,6 +70,7 @@ class DialogEditTextFieldEntry<T> extends DialogFieldEntry<T> {
 
         hint = getString(ann.hintId());
         label = getString(ann.labelId());
+        inputType = ann.inputType();
     }
 
     private String getString(int id) {
@@ -92,6 +94,10 @@ class DialogEditTextFieldEntry<T> extends DialogFieldEntry<T> {
 
     public String getLabel() {
         return label;
+    }
+
+    public int getInputType() {
+        return inputType;
     }
 
     private static class NoProperConstructorException extends RuntimeException {
