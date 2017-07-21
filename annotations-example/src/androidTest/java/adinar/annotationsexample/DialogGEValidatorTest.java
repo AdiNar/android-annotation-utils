@@ -16,7 +16,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static adinar.annotationsexample.EspressoTestCaseUtils.clickChooseListElementViewWith;
 import static adinar.annotationsexample.EspressoTestCaseUtils.withIndex;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -24,6 +23,7 @@ import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -31,30 +31,40 @@ import static org.hamcrest.Matchers.allOf;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class ObjectDialogExampleSimpleTest {
+public class DialogGEValidatorTest {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void objectDialogExampleSimpleTest() throws InterruptedException {
-        clickChooseListElementViewWith("Dialog examples");
-        clickChooseListElementViewWith("Simple");
+    public void dialogGEValidatorTest() throws InterruptedException {
+        ViewInteraction appCompatTextView = onView(
+                allOf(withId(android.R.id.text1), withText("Dialog examples"),
+                        childAtPosition(
+                                withId(R.id.example_list),
+                                0),
+                        isDisplayed()));
+        appCompatTextView.perform(click());
+
+        ViewInteraction appCompatTextView2 = onView(
+                allOf(withId(android.R.id.text1), withText("Validators and primitives"),
+                        childAtPosition(
+                                withId(R.id.example_list),
+                                1),
+                        isDisplayed()));
+        appCompatTextView2.perform(click());
 
         ViewInteraction floatingActionButton = onView(
                 allOf(withId(R.id.fab), isDisplayed()));
         floatingActionButton.perform(click());
 
-        onView(withIndex(withId(R.id.value), 0))
-                .perform(replaceText("test"), closeSoftKeyboard());
+        Thread.sleep(500);
 
-        ViewInteraction appCompatEditText2 = onView(
+        ViewInteraction appCompatEditText = onView(
                 withIndex(withId(R.id.value), 1));
-        appCompatEditText2.perform(click());
+        appCompatEditText.perform(replaceText(""), closeSoftKeyboard());
 
-        ViewInteraction appCompatEditText3 = onView(
-                withIndex(withId(R.id.value), 1));
-        appCompatEditText3.perform(replaceText("123"), closeSoftKeyboard());
+        appCompatEditText.perform(replaceText("-100"), closeSoftKeyboard());
 
         ViewInteraction appCompatButton = onView(
                 allOf(withId(android.R.id.button1), withText("OK")));
@@ -62,25 +72,16 @@ public class ObjectDialogExampleSimpleTest {
 
         Thread.sleep(500);
 
-        ViewInteraction textView = onView(
-                allOf(withId(R.id.name), withText("test"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.example_list),
-                                        0),
-                                0),
-                        isDisplayed()));
-        textView.check(matches(withText("test")));
+        appCompatEditText.check(matches(hasErrorText("Number must be > 0!")));
 
-        ViewInteraction textView2 = onView(
-                allOf(withId(R.id.contact_phone), withText("123"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.example_list),
-                                        0),
-                                2),
-                        isDisplayed()));
-        textView2.check(matches(withText("123")));
+        ViewInteraction appCompatEditText3 = onView(
+                withIndex(withId(R.id.value), 1));
+        appCompatEditText3.perform(replaceText("100"), closeSoftKeyboard());
+
+        ViewInteraction appCompatButton2 = onView(
+                allOf(withId(android.R.id.button1), withText("OK")));
+        appCompatButton2.perform(scrollTo(), click());
+
     }
 
     private static Matcher<View> childAtPosition(
