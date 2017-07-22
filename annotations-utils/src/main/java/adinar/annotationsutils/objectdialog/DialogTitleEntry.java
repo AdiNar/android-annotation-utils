@@ -25,12 +25,10 @@ abstract class DialogTitleEntry<T> {
                 try {
                     return String.valueOf(FieldAndMethodAccess.getMethodValue(m, object));
                 } catch (IllegalAccessException e) {
-                    throw new InvalidDialogAccessException(m.getName());
+                    throw new InvalidDialogAccessException(m.getName(), e);
                 } catch (InvocationTargetException e) {
-                    e.printStackTrace();
+                    throw new InvalidDialogAccessException(m.getName(), e);
                 }
-
-                return null;
             }
         };
     }
@@ -42,15 +40,15 @@ abstract class DialogTitleEntry<T> {
                 try {
                     return String.valueOf(FieldAndMethodAccess.getFieldValue(f, object));
                 } catch (IllegalAccessException e) {
-                    throw new InvalidDialogAccessException(f.getName());
+                    throw new InvalidDialogAccessException(f.getName(), e);
                 }
             }
         };
     }
 
     public static class InvalidDialogAccessException extends RuntimeException {
-        public InvalidDialogAccessException(String name) {
-            super(String.format("Dialog processor has no access to %s.", name));
+        public InvalidDialogAccessException(String name, Throwable e) {
+            super(String.format("Dialog processor has no access to %s.", name), e);
         }
     }
 }

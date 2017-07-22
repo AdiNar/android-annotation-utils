@@ -1,6 +1,7 @@
 package adinar.annotationsutils.objectdialog.validation;
 
 
+import android.support.annotation.NonNull;
 import android.view.View;
 
 public abstract class Validator<T extends View> {
@@ -13,6 +14,7 @@ public abstract class Validator<T extends View> {
             setErrorMessageInView();
         } else {
             result = true;
+            hideErrorMessageInView();
         }
 
         return (next == null || next.isValid()) && result;
@@ -20,13 +22,14 @@ public abstract class Validator<T extends View> {
 
     protected abstract boolean isValidSingle();
     protected abstract void setErrorMessageInView();
+    protected abstract void hideErrorMessageInView();
 
     private Validator next;
 
     // Empty constructor is needed by builders, use with setView().
     public Validator() {}
     public Validator(T view) {
-        this.view = view;
+        setView(view);
     }
 
     Validator getNext() {
@@ -40,7 +43,11 @@ public abstract class Validator<T extends View> {
         else this.next = next;
     }
 
-    public void setView(T view) {
+    public void setView(@NonNull T view) {
         this.view = view;
+    }
+
+    public T getView() {
+        return view;
     }
 }

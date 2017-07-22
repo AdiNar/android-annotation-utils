@@ -24,9 +24,12 @@ public @interface DialogEditText {
     /** One of {@link InputType}. */
     int inputType() default InputType.TYPE_CLASS_TEXT;
 
+    /** EditText validator interface, will be applied to view on save action or
+     *  on every char tapped by user when {@link #isInteractive} is on. */
     @interface ETValidator {
         Class<? extends TextViewValidator> clazz();
         int errorMsgId() default 0;
+        boolean isInteractive() default false;
     }
 
     ETValidator[] validators() default {};

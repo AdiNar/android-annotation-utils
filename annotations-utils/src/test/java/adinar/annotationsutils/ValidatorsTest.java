@@ -53,5 +53,8 @@ public class ValidatorsTest {
 
         @Override
         protected void setErrorMessageInView() {}
+
+        @Override
+        protected void hideErrorMessageInView() {}
     }
 }

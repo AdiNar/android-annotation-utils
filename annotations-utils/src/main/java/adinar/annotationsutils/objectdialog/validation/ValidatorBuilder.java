@@ -14,6 +14,9 @@ public class ValidatorBuilder {
 
             @Override
             protected void setErrorMessageInView() {}
+
+            @Override
+            protected void hideErrorMessageInView() {}
         };
     }
 

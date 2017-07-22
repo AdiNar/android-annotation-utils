@@ -58,8 +58,14 @@ class DialogEditTextFieldEntry<T> extends DialogFieldEntry<T> {
     private TextViewValidator getTextViewValidator(EditText et, DialogEditText.ETValidator v)
             throws InstantiationException, IllegalAccessException {
         TextViewValidator val = v.clazz().newInstance();
+
+        if (v.isInteractive()) {
+            val = new InteractiveTextValidator(val);
+        }
+
         val.setView(et);
         val.setErrorMessageString(Utils.getString(ctx, v.errorMsgId()));
+
         return val;
     }
 
