@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import adinar.annotationsutils.common.FieldAndMethodAccess;
+
 abstract class DialogTitleEntry<T> {
     public abstract String getTitleFrom(T object);
 
@@ -21,7 +23,7 @@ abstract class DialogTitleEntry<T> {
             @Override
             public String getTitleFrom(T object) {
                 try {
-                    return String.valueOf(m.invoke(object));
+                    return String.valueOf(FieldAndMethodAccess.getMethodValue(m, object));
                 } catch (IllegalAccessException e) {
                     throw new InvalidDialogAccessException(m.getName());
                 } catch (InvocationTargetException e) {
@@ -38,7 +40,7 @@ abstract class DialogTitleEntry<T> {
             @Override
             public String getTitleFrom(T object) {
                 try {
-                    return String.valueOf(f.get(object));
+                    return String.valueOf(FieldAndMethodAccess.getFieldValue(f, object));
                 } catch (IllegalAccessException e) {
                     throw new InvalidDialogAccessException(f.getName());
                 }
