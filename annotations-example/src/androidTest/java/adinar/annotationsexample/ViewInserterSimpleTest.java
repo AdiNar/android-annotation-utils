@@ -53,7 +53,7 @@ public class ViewInserterSimpleTest {
         appCompatTextView2.perform(click());
 
         ViewInteraction textView = onView(
-                allOf(withId(R.id.name), withText("John"),
+                allOf(withId(R.id.field1), withText("John"),
                         childAtPosition(
                                 allOf(withId(R.id.person_layout),
                                         childAtPosition(
@@ -64,7 +64,7 @@ public class ViewInserterSimpleTest {
         textView.check(matches(withText("John")));
 
         ViewInteraction textView2 = onView(
-                allOf(withId(R.id.surname), withText("Johnatansky"),
+                allOf(withId(R.id.field3), withText("Johnatansky"),
                         childAtPosition(
                                 allOf(withId(R.id.person_layout),
                                         childAtPosition(

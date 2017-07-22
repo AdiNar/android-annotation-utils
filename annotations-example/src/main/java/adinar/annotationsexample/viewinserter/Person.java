@@ -6,10 +6,10 @@ import adinar.annotationsutils.viewinserter.annotations.InsertTo;
 
 public class Person {
 
-    @InsertTo(id = R.id.name)
+    @InsertTo(id = R.id.field1)
     private String name;
 
-    @InsertTo(id = R.id.surname)
+    @InsertTo(id = R.id.field3)
     private String surname;
 
     @InsertTo(id = R.id.age, asString = true)

@@ -8,9 +8,11 @@
     <string name="zip_code">Zip code</string>
     <string name="phone">Phone</string>
     <string name="citizens">Citizens</string>
-    <string name="must_be_ge_0"><![CDATA[Number must be > 0!]]></string>
+    <string name="must_be_ge_0"><![CDATA[Number must be >= 0!]]></string>
     <string name="save">Save!</string>
     <string name="save_example_info">After you click the button data from above will be saved to object and then injected into view below.</string>
     <string name="yes">Yes</string>
     <string name="add">Add</string>
+    <string name="must_not_be_one_of_abc">abc characters are forbidden!</string>
+    <string name="no_abc">No abc allowed!</string>
 </resources>

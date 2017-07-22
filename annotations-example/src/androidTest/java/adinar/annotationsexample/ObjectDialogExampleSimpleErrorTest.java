@@ -37,8 +37,8 @@ public class ObjectDialogExampleSimpleErrorTest {
 
     @Test
     public void objectDialogExampleSimpleErrorTest() {
-        clickChooseListElementViewWith("Dialog examples");
-        clickChooseListElementViewWith("Simple");
+        clickChooseListElementViewWith("Dialog examples", 0);
+        clickChooseListElementViewWith("Simple", 0);
 
         // click fab + button
         ViewInteraction floatingActionButton = onView(

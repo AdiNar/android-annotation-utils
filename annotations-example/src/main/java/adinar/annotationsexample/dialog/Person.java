@@ -11,7 +11,7 @@ import adinar.annotationsutils.viewinserter.annotations.InsertTo;
         buttons = {@DialogButton()}
 )
 public class Person {
-    @InsertTo(id = R.id.name, asString = true)
+    @InsertTo(id = R.id.field1, asString = true)
     @DialogEditText(
             order = 1,
             labelId = R.string.name,
@@ -22,7 +22,7 @@ public class Person {
     )
     private String name;
 
-    @InsertTo(id = R.id.contact_phone, asString = true)
+    @InsertTo(id = R.id.field2, asString = true)
     @DialogEditText(order=2, hintId = R.string.contact_phone)
     private String contactPhone;
 

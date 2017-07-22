@@ -38,8 +38,8 @@ public class ObjectDialogExampleSimpleTest {
 
     @Test
     public void objectDialogExampleSimpleTest() throws InterruptedException {
-        clickChooseListElementViewWith("Dialog examples");
-        clickChooseListElementViewWith("Simple");
+        clickChooseListElementViewWith("Dialog examples", 0);
+        clickChooseListElementViewWith("Simple", 0);
 
         ViewInteraction floatingActionButton = onView(
                 allOf(withId(R.id.fab), isDisplayed()));
@@ -63,7 +63,7 @@ public class ObjectDialogExampleSimpleTest {
         Thread.sleep(500);
 
         ViewInteraction textView = onView(
-                allOf(withId(R.id.name), withText("test"),
+                allOf(withId(R.id.field1), withText("test"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.example_list),
@@ -73,7 +73,7 @@ public class ObjectDialogExampleSimpleTest {
         textView.check(matches(withText("test")));
 
         ViewInteraction textView2 = onView(
-                allOf(withId(R.id.contact_phone), withText("123"),
+                allOf(withId(R.id.field2), withText("123"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.example_list),

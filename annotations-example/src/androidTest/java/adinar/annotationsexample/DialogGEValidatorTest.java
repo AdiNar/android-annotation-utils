@@ -16,6 +16,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static adinar.annotationsexample.EspressoTestCaseUtils.clickChooseListElementViewWith;
 import static adinar.annotationsexample.EspressoTestCaseUtils.withIndex;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -38,21 +39,8 @@ public class DialogGEValidatorTest {
 
     @Test
     public void dialogGEValidatorTest() throws InterruptedException {
-        ViewInteraction appCompatTextView = onView(
-                allOf(withId(android.R.id.text1), withText("Dialog examples"),
-                        childAtPosition(
-                                withId(R.id.example_list),
-                                0),
-                        isDisplayed()));
-        appCompatTextView.perform(click());
-
-        ViewInteraction appCompatTextView2 = onView(
-                allOf(withId(android.R.id.text1), withText("Validators and primitives"),
-                        childAtPosition(
-                                withId(R.id.example_list),
-                                1),
-                        isDisplayed()));
-        appCompatTextView2.perform(click());
+        clickChooseListElementViewWith("Dialog examples", 0);
+        clickChooseListElementViewWith("Validators and primitives", 1);
 
         ViewInteraction floatingActionButton = onView(
                 allOf(withId(R.id.fab), isDisplayed()));
@@ -62,17 +50,19 @@ public class DialogGEValidatorTest {
 
         ViewInteraction appCompatEditText = onView(
                 withIndex(withId(R.id.value), 1));
-        appCompatEditText.perform(replaceText(""), closeSoftKeyboard());
 
+        // Write -100, error because >= 0 is needed.
         appCompatEditText.perform(replaceText("-100"), closeSoftKeyboard());
 
+        // Tap OK
         ViewInteraction appCompatButton = onView(
                 allOf(withId(android.R.id.button1), withText("OK")));
         appCompatButton.perform(scrollTo(), click());
 
         Thread.sleep(500);
 
-        appCompatEditText.check(matches(hasErrorText("Number must be > 0!")));
+
+        appCompatEditText.check(matches(hasErrorText("Number must be >= 0!")));
 
         ViewInteraction appCompatEditText3 = onView(
                 withIndex(withId(R.id.value), 1));

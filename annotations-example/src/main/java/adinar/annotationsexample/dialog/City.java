@@ -14,6 +14,7 @@ import adinar.annotationsutils.objectdialog.validation.NumberValidators;
                 type = DialogButton.ButtonType.POSITIVE)}
 )
 class City {
+
     @DialogEditText(order = 1, labelId = R.string.zip_code, inputType =
             InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED)
     private String zipCode;
@@ -24,6 +25,15 @@ class City {
     @DialogEditText(order = 2, labelId = R.string.citizens,
             validators = @DialogEditText.ETValidator(
                     clazz = NumberValidators.GE_NumberValidator.class,
-                    errorMsgId = R.string.must_be_ge_0))
+                    errorMsgId = R.string.must_be_ge_0)
+    )
     private int citizens;
+
+    @DialogEditText(order = 4, labelId = R.string.no_abc,
+            validators = @DialogEditText.ETValidator(
+                    clazz = ExcludedAbcValidator.class,
+                    errorMsgId = R.string.must_not_be_one_of_abc,
+                    isInteractive = true)
+    )
+    private String noABCs;
 }
