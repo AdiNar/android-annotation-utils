@@ -12,7 +12,7 @@ import adinar.annotationsutils.objectdialog.validation.TextViewValidator;
 /** Wrapper for {@link TextViewValidator} that is triggered on every text change.
  *  Also behaves as wrapped validator, input will be validated when user clicks save button. */
 class InteractiveTextValidator extends TextViewValidator {
-    private static final String TAG = "InteractiveText";
+    private static final String TAG = "InteractiveTextVal";
     private final TextViewValidator val;
     private TextWatcher watcher;
 
@@ -28,7 +28,6 @@ class InteractiveTextValidator extends TextViewValidator {
 
             @Override
             public void afterTextChanged(Editable s) {
-                Log.d(TAG, "Changed, " + s.toString());
                 val.isValid();
             }
         };
