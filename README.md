@@ -11,6 +11,8 @@ dependencies {
 to your build.gradle file.
 
 # Short insight
+
+## Example usage of ViewInserter.
 Assume it's your data class:
 ```
 public class Juice {
@@ -45,4 +47,3 @@ If you want to start using the library or see it in work, there's an example app
 useful stuff that it provides!
 
 Documentation is not ready yet but I hope examples are clear enough to understand all usecases.
-
