@@ -37,7 +37,7 @@ public class DialogDynamicTitleTest {
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void dialogDynamicTitleTest2() {
+    public void dialogDynamicTitleTest() {
         clickChooseListElementViewWith("Dialog examples", 0);
         clickChooseListElementViewWith("Dynamic title", 3);
 
