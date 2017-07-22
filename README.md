@@ -5,7 +5,7 @@ They're made to speed up the data transfer process between object and correspond
 To use library just add
 ```
 dependencies {
-    compile 'adinar.annotationsutils:annotations-utils:0.9' (not ready yet)
+    compile 'adinar.annotationsutils:annotations-utils:0.9'
 }
 ```
 to your build.gradle file.
