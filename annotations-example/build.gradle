@@ -20,6 +20,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    productFlavors {
+        remote { }
+        local { }
+    }
 }
 
 dependencies {
@@ -30,6 +35,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     testCompile 'junit:junit:4.12'
-    compile project(':annotations-utils')
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    remoteCompile 'adinar.annotationsutils:annotations-utils:0.9'
+    localCompile project(':annotations-utils')
 }
