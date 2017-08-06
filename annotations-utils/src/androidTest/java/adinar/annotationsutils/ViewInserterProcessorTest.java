@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import adinar.annotationsutils.viewinserter.MethodResolver;
 import adinar.annotationsutils.viewinserter.ViewInserterProcessor;
 import adinar.annotationsutils.viewinserter.annotations.InsertTo;
+import adinar.annotationsutils.viewinserter.annotations.InsertToClass;
 
 import static android.support.test.InstrumentationRegistry.getContext;
 
@@ -100,6 +101,41 @@ public class ViewInserterProcessorTest {
         Assert.assertEquals("not_saved", obj.nonSave2);
         Assert.assertEquals(Integer.valueOf(1000), obj.save2IntegerValue);
     }
+
+    @Test
+    public void testInheritedAnnotations() {
+        InheritanceTestClass obj = new InheritanceTestClass();
+
+        View view = LayoutInflater.from(getContext())
+                .inflate(R.layout.test_view_inserter_processor, null);
+
+        ViewInserterProcessor.insertInto(view, obj);
+
+        TextView tv = (TextView) view.findViewById(R.id.string1);
+        Assert.assertEquals(obj.string1, tv.getText());
+
+        tv = (TextView) view.findViewById(R.id.int1);
+        Assert.assertEquals(String.valueOf(obj.overrideInt), tv.getText());
+
+        tv = (TextView) view.findViewById(R.id.int2);
+        Assert.assertEquals(String.valueOf(obj.int2), tv.getText());
+    }
+
+    @Test
+    public void testNoInheritanceWhenDisabled() {
+        NoInheritanceTestClass obj = new NoInheritanceTestClass();
+
+        View view = LayoutInflater.from(getContext())
+                .inflate(R.layout.test_view_inserter_processor, null);
+
+        ViewInserterProcessor.insertInto(view, obj);
+
+        TextView tv = (TextView) view.findViewById(R.id.string1);
+        Assert.assertFalse("string1".equals(tv.getText()));
+
+        tv = (TextView) view.findViewById(R.id.int1);
+        Assert.assertEquals(String.valueOf(obj.int1), tv.getText());
+    }
 }
 
 class TestClass {
@@ -157,4 +193,18 @@ class SaveTestClass {
 
     @InsertTo(id = R.id.non_save2)
     String nonSave2 = "not_saved";
+}
+
+class InheritanceTestClass extends TestClass {
+    @InsertTo(id = R.id.int2, asString = true)
+    int int2 = 2;
+
+    @InsertTo(id = R.id.int1, asString = true)
+    int overrideInt = 3;
+}
+
+@InsertToClass(withSuper = false)
+class NoInheritanceTestClass extends TestClass {
+    @InsertTo(id = R.id.int1, asString = true)
+    int int1 = 10;
 }

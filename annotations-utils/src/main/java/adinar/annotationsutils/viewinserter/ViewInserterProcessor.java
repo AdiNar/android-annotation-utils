@@ -1,7 +1,6 @@
 package adinar.annotationsutils.viewinserter;
 
 
-import android.util.Log;
 import android.view.View;
 
 public class ViewInserterProcessor {
@@ -21,7 +20,7 @@ public class ViewInserterProcessor {
     }
 
     /** This approach assumes that @object's tag is not used anywhere.
-     * Useful for list elements etc where tag is normally used. */
+     *  Useful for list elements etc where tag is normally used. */
     public static<T> void insertInto(View view, T object,
                                      OnInsertedViewClickListener<T> listener, int objectId) {
         ViewInserterHolder<T> holder = (ViewInserterHolder<T>) view.getTag();
