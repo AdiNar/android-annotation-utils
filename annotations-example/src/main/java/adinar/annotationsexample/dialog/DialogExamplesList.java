@@ -1,7 +1,7 @@
 package adinar.annotationsexample.dialog;
 
 
-import adinar.annotationsexample.custom.ExampleListActivity;
+import adinar.annotationsexample.common.ExampleListActivity;
 
 public class DialogExamplesList extends ExampleListActivity {
 

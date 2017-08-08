@@ -1,7 +1,7 @@
 package adinar.annotationsexample.viewinserter;
 
 
-import adinar.annotationsexample.custom.ExampleListActivity;
+import adinar.annotationsexample.common.ExampleListActivity;
 
 public class ViewInserterExamplesList  extends ExampleListActivity {
 
@@ -10,6 +10,7 @@ public class ViewInserterExamplesList  extends ExampleListActivity {
         return new Entry[] {
             new Entry("Simple", ViewInserterSimpleExample.class),
             new Entry("Save", ViewInserterSaveExample.class),
+            new Entry("Inheritance", ViewInserterInheritanceExample.class),
         };
     }
 }

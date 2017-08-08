@@ -1,6 +1,6 @@
 package adinar.annotationsexample;
 
-import adinar.annotationsexample.custom.ExampleListActivity;
+import adinar.annotationsexample.common.ExampleListActivity;
 import adinar.annotationsexample.dialog.DialogExamplesList;
 import adinar.annotationsexample.viewinserter.ViewInserterExamplesList;
 

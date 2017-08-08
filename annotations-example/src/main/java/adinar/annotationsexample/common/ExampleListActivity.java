@@ -1,4 +1,4 @@
-package adinar.annotationsexample.custom;
+package adinar.annotationsexample.common;
 
 
 import android.app.Activity;

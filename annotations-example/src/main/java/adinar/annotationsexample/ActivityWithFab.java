@@ -3,7 +3,7 @@ package adinar.annotationsexample;
 
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
-import adinar.annotationsexample.custom.CustomTitleActivity;
+import adinar.annotationsexample.common.CustomTitleActivity;
 
 public abstract class ActivityWithFab extends CustomTitleActivity {
 
