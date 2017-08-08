@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import adinar.annotationsexample.R;
-import adinar.annotationsexample.custom.CustomTitleActivity;
+import adinar.annotationsexample.common.CustomTitleActivity;
 import adinar.annotationsutils.viewinserter.ViewInserterProcessor;
 
 public class ViewInserterSimpleExample extends CustomTitleActivity {

@@ -2,7 +2,6 @@ package adinar.annotationsutils.viewinserter;
 
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -18,7 +17,6 @@ public class InsertToAnnotationFilter extends
 
     public InsertToAnnotationFilter(Class clazz) {
         super(clazz);
-        Log.d(TAG, "InsertToFilter init");
         addAnnotation(InsertTo.class);
         addSuperClasses(clazz);
     }
@@ -26,13 +24,11 @@ public class InsertToAnnotationFilter extends
     /** Adds superclasses that are allowed by {@link InsertToClass#withSuper()}. Breaks on first
      *  disallowing in superclasses chain. */
     private void addSuperClasses(Class clazz) {
-        Log.d(TAG, "add super class " + clazz + "?");
         Class superClass = clazz.getSuperclass();
         if (superClass != null) { // otherwise it's Object.
             InsertToClass ann = (InsertToClass) clazz.getAnnotation(InsertToClass.class);
             if (shouldSuperClassBeCalled(ann)) {
                 addSuperClasses(superClass); // recursively add next superclasse.
-                Log.d(TAG, "Oh yeah, adding!");
                 addSuperclassToInclude(superClass);
             }
         }

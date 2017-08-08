@@ -2,7 +2,6 @@ package adinar.annotationsutils.common;
 
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -39,7 +38,6 @@ public abstract class AnnotationFilter<
     }
     
     public void addSuperclassToInclude(Class toInclude) {
-        Log.d(TAG, "toInclude " + toInclude);
         this.superclassesToInclude.add(toInclude);
     }
 
@@ -54,8 +52,6 @@ public abstract class AnnotationFilter<
     }
     
     public AnnotationFilter innerFilter(Class filterClass) {
-
-        Log.d(TAG, "innerFilter: " + filterClass);
 
         applyFilteringFromSuperClassIfNeeded(filterClass);
 
