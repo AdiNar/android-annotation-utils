@@ -6,15 +6,6 @@ import android.view.View;
 public class ViewInserterProcessor {
     private static final String TAG = "ViewInserterProcessor";
 
-    public static<T> void insertIntoAndKeepTag(View view, T object,
-                                               OnInsertedViewClickListener<T> listener, int objectId) {
-        insertInto(new ViewInserterHolder(view, object.getClass()), object, listener, objectId);
-    }
-
-    public static<T> void insertIntoAndKeepTag(View view, T object) {
-        insertInto(new ViewInserterHolder(view, object.getClass()), object, null, 0);
-    }
-
     public static<T> void insertInto(View view, T object) {
         insertInto(view, object, null, 0);
     }

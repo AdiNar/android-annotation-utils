@@ -38,7 +38,7 @@ public class ViewInserterEmbeddedTest {
 
         arr[0].embNested = "nested0";
         arr[1].embNested = "nested1";
-        
+
         View view = LayoutInflater.from(getContext())
                 .inflate(R.layout.test_view_inserter_processor_embedded, null);
 
