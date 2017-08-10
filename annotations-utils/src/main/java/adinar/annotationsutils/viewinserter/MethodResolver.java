@@ -1,20 +1,17 @@
 package adinar.annotationsutils.viewinserter;
 
 
-import android.support.v4.util.LruCache;
+import android.util.Pair;
 
 import java.lang.reflect.Method;
 
+import adinar.annotationsutils.common.Cache;
 import adinar.annotationsutils.common.PrimitiveToObjectConverter;
 
 public class MethodResolver {
-    private static final int MAX_LRU_CACHE = 1000000;
     private static final String TAG = "MethodResolver";
 
-    private MethodResolver() {
-    }
-
-    private static LruCache<MethodEntry, Method> cache = new LruCache<>(MAX_LRU_CACHE);
+    private MethodResolver() {}
 
     private static class MethodEntry {
         String methodName;
@@ -59,7 +56,7 @@ public class MethodResolver {
             this.orgMethodClass = methodClass;
         }
 
-        public Method getMethod(Class methodClass) {
+        public Method getMethod(final Class methodClass) {
             if (methodClass == null) {
                 throw new NoSuchMethodExceptionRuntime(
                         String.format("Method %s(%s) was not found in " +
@@ -75,24 +72,25 @@ public class MethodResolver {
 
             MethodEntry entry = new MethodEntry(methodName, argumentClass, methodClass);
 
-            if (cache.get(entry) != null) {
-                return cache.get(entry);
-            }
+            return Cache.getCached(new Pair<>(MethodResolver.class, entry),
+                    new Cache.Supplier<Method>() {
+                @Override
+                public Method get() {
+                    Method meth;
+                    try {
+                        if (argumentClass == void.class) {
+                            meth = methodClass.getDeclaredMethod(methodName);
+                        } else {
+                            meth = methodClass.getDeclaredMethod(methodName, argumentClass);
+                        }
+                    } catch (NoSuchMethodException e) {
+                        meth = checkForMethodWithPrimitiveArgument(methodClass);
+                        if (meth == null) meth = getMethod(methodClass.getSuperclass());
+                    }
 
-            Method meth;
-            try {
-                if (argumentClass == void.class) {
-                    meth = methodClass.getDeclaredMethod(methodName);
-                } else {
-                    meth = methodClass.getDeclaredMethod(methodName, argumentClass);
+                    return meth;
                 }
-            } catch (NoSuchMethodException e) {
-                meth = checkForMethodWithPrimitiveArgument(methodClass);
-                if (meth == null) meth = getMethod(methodClass.getSuperclass());
-            }
-
-            cache.put(entry, meth);
-            return meth;
+            });
         }
 
         private Method checkForMethodWithPrimitiveArgument(Class methodClass) {
