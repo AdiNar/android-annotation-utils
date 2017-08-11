@@ -1,15 +1,15 @@
 package adinar.annotationsutils.objectdialog;
 
 import android.content.Context;
+import android.util.Pair;
 import android.view.View;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
+import adinar.annotationsutils.common.Cache;
 import adinar.annotationsutils.common.FieldAndMethodAccess;
 import adinar.annotationsutils.common.PrimitiveToObjectConverter;
 import adinar.annotationsutils.objectdialog.validation.Validator;
@@ -33,12 +33,6 @@ public abstract class DialogFieldEntry<T> {
     /** Object to get data from (and save to). */
     private T object;
 
-    private static Map<Class, Method> valueOfCache;
-
-    static {
-        valueOfCache = new HashMap<>();
-    }
-
     /** Method used as valueOf for strings - just id function. */
     static String stringId(String value) {
         return value;
@@ -50,23 +44,22 @@ public abstract class DialogFieldEntry<T> {
     public static Method getValueOfForClass(Class clazz) {
         clazz = PrimitiveToObjectConverter.getObjectClass(clazz);
 
-        Method meth = valueOfCache.get(clazz);
-
-        if (meth == null) {
+        final Class finalClazz = clazz;
+        return Cache.getCached(new Pair<>(DialogFieldEntry.class, clazz), new Cache.Supplier<Method>() {
+            @Override
+            public Method get() {
                 try {
-                    if (clazz != String.class) {
-                        meth = clazz.getMethod("valueOf", String.class);
-                        valueOfCache.put(clazz, meth);
+                    if (finalClazz != String.class) {
+                        return finalClazz.getMethod("valueOf", String.class);
                     } else {
                         return getStringIdMethod();
                     }
                 } catch (NoSuchMethodException e) {
                     throw new RuntimeException(String.format("Class %s should implement static " +
-                            "method valueOf(String)", clazz), e);
+                            "method valueOf(String)", finalClazz), e);
                 }
             }
-
-        return meth;
+        });
     }
 
     private static Method getStringIdMethod() throws NoSuchMethodException {

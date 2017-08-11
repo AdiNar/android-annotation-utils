@@ -1,4 +1,4 @@
-package adinar.annotationsutils;
+package adinar.annotationsutils.viewinserter;
 
 
 import android.support.test.runner.AndroidJUnit4;
@@ -13,8 +13,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import adinar.annotationsutils.viewinserter.MethodResolver;
-import adinar.annotationsutils.viewinserter.ViewInserterProcessor;
+import adinar.annotationsutils.R;
 import adinar.annotationsutils.viewinserter.annotations.InsertTo;
 import adinar.annotationsutils.viewinserter.annotations.InsertToClass;
 

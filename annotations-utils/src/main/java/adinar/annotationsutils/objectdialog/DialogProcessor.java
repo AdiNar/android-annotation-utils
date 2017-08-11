@@ -3,20 +3,14 @@ package adinar.annotationsutils.objectdialog;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.util.LruCache;
+import android.support.v4.util.Pair;
+
+import adinar.annotationsutils.common.Cache;
 
 /** Main class containing methods to deal with dialogs. */
 public class DialogProcessor<T> {
     private Context ctx;
     private Dialog dialog;
-
-    private static LruCache<Class, DialogClassData> cache;
-
-    private static final int DEFAULT_LRU_SIZE = 1000;
-
-    static {
-        cache = new LruCache<>(DEFAULT_LRU_SIZE);
-    }
 
     public DialogProcessor(Context ctx) {
         this.ctx = ctx;
@@ -50,11 +44,12 @@ public class DialogProcessor<T> {
     }
 
     /** Caches class dialog data extracted from it's annotations. */
-    private DialogClassData prepareDataForClass(Class<T> clazz) {
-        if (cache.get(clazz) == null) {
-            cache.put(clazz, new DialogClassData<>(clazz, ctx));
-        }
-
-        return cache.get(clazz);
+    private DialogClassData prepareDataForClass(final Class<T> clazz) {
+        return Cache.getCached(new Pair<>(DialogProcessor.class, clazz), new Cache.Supplier<DialogClassData>() {
+            @Override
+            public DialogClassData get() {
+                return new DialogClassData<>(clazz, ctx);
+            }
+        });
     }
 }
